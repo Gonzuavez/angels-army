@@ -1002,21 +1002,26 @@ function createLedgerGroup(group, scope) {
   const details = document.createElement("details");
   details.className = `ledger-group ${scope}-ledger-group`;
   const sectionLabel = group.section ? `${group.section} / ${group.shrh}` : "Personal custody";
+  const summaryCells =
+    scope === "master"
+      ? `
+        <span>${sectionLabel}</span>
+        <span>${group.lin}</span>
+        <span>${group.nomenclature}</span>
+        <span>${group.nsn}</span>
+        <span>${group.part}</span>
+        <span>${group.assets.length} EA</span>
+      `
+      : `
+        <span>${group.lin}</span>
+        <span>${group.nomenclature}</span>
+        <span>${group.nsn}</span>
+        <span>${group.part}</span>
+        <span>${group.assets.length} EA</span>
+      `;
   details.innerHTML = `
     <summary class="${scope === "master" ? "master-ledger-row" : "personal-ledger-row"} ledger-summary">
-      <span>${group.lin}</span>
-      <span>${group.nomenclature}</span>
-      <span>${group.nsn}</span>
-      <span>${group.part}</span>
-      <span>${group.assets.length} EA</span>
-      ${scope === "master" ? `<span>${sectionLabel}</span>` : ""}
-      <span class="ledger-actions">
-        <button type="button" data-ledger-action="Turn-In">Turn-In</button>
-        <button type="button" data-ledger-action="Transfer">Transfer</button>
-        <button type="button" data-ledger-action="AAR">AAR</button>
-        <button type="button" data-ledger-action="Lost">Lost</button>
-        <button type="button" data-ledger-action="Notes">Notes</button>
-      </span>
+      ${summaryCells}
     </summary>
     <div class="ledger-detail-panel">
       <div class="ledger-detail-head">
@@ -1025,17 +1030,25 @@ function createLedgerGroup(group, scope) {
         <span>Location</span>
         <span>Signed Custody Status</span>
         <span>File</span>
+        <span>Actions</span>
       </div>
       ${group.assets
         .map(
           (asset, index) => `
-            <button class="ledger-serial-row" type="button" data-asset-index="${index}">
+            <div class="ledger-serial-row">
               <span>${asset.serial}</span>
               <span>${asset.endUser}</span>
               <span>${asset.location}</span>
               <span>${asset.status}</span>
-              <span>Open cabinet</span>
-            </button>
+              <button class="ledger-file-btn" type="button" data-asset-index="${index}">Open cabinet</button>
+              <span class="ledger-actions">
+                <button type="button" data-ledger-action="Turn-In" data-asset-index="${index}">Turn-In</button>
+                <button type="button" data-ledger-action="Transfer" data-asset-index="${index}">Transfer</button>
+                <button type="button" data-ledger-action="AAR" data-asset-index="${index}">AAR</button>
+                <button type="button" data-ledger-action="Lost" data-asset-index="${index}">Lost</button>
+                <button type="button" data-ledger-action="Notes" data-asset-index="${index}">Notes</button>
+              </span>
+            </div>
           `,
         )
         .join("")}
@@ -1045,10 +1058,11 @@ function createLedgerGroup(group, scope) {
     button.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      openLedgerAction(button.dataset.ledgerAction, group);
+      const asset = group.assets[Number(button.dataset.assetIndex)];
+      openLedgerAction(button.dataset.ledgerAction, group, asset);
     });
   });
-  details.querySelectorAll(".ledger-serial-row").forEach((button) => {
+  details.querySelectorAll(".ledger-file-btn").forEach((button) => {
     button.addEventListener("click", () => {
       const asset = group.assets[Number(button.dataset.assetIndex)];
       openMasterFileCabinet({
@@ -1063,17 +1077,15 @@ function createLedgerGroup(group, scope) {
   return details;
 }
 
-function openLedgerAction(action, group) {
-  const serialOptions = group.assets.map((asset) => `<option>${asset.serial} - ${asset.endUser}</option>`).join("");
-  drawerTitle.textContent = `${action}: ${group.nomenclature}`;
+function openLedgerAction(action, group, asset = group.assets[0]) {
+  drawerTitle.textContent = `${action}: ${asset.serial}`;
   drawerBody.innerHTML = `
     <div class="detail-line"><span>LIN / Nomenclature</span><strong>${group.lin} - ${group.nomenclature}</strong></div>
     <div class="detail-line"><span>NSN / Model</span><p>${group.nsn} / ${group.part}</p></div>
+    <div class="detail-line"><span>Serial number</span><strong>${asset.serial}</strong></div>
+    <div class="detail-line"><span>Current holder</span><p>${asset.endUser}</p></div>
+    <div class="detail-line"><span>Current location</span><p>${asset.location}</p></div>
     <form class="status-question-form" aria-label="${action} serial selection">
-      <label>
-        <span>Choose serial number</span>
-        <select>${serialOptions}</select>
-      </label>
       <label>
         <span>Reason / notes</span>
         <textarea>${action === "AAR" ? "Explain the serial number, nomenclature, NSN, or model correction requested." : `Explain why this ${action.toLowerCase()} action is needed for the selected serial number.`}</textarea>

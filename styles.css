@@ -179,7 +179,8 @@ button {
 .brand-banner {
   position: relative;
   overflow: hidden;
-  min-height: clamp(180px, 24vw, 310px);
+  max-height: 190px;
+  min-height: clamp(104px, 14vw, 180px);
   border: 1px solid #202820;
   border-radius: 8px;
   background: #050b0f;
@@ -190,7 +191,8 @@ button {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: clamp(180px, 24vw, 310px);
+  max-height: 190px;
+  min-height: clamp(104px, 14vw, 180px);
   object-fit: cover;
   object-position: center 42%;
 }
@@ -946,10 +948,10 @@ select {
 .master-ledger-row,
 .personal-ledger-row {
   display: grid;
-  grid-template-columns: 28px minmax(92px, 0.75fr) minmax(190px, 1.35fr) minmax(130px, 0.95fr) minmax(150px, 1fr) 72px minmax(170px, 1fr) minmax(330px, 1.7fr);
+  grid-template-columns: 28px minmax(170px, 1.1fr) minmax(92px, 0.7fr) minmax(210px, 1.45fr) minmax(140px, 0.95fr) minmax(160px, 1fr) 72px;
   gap: 8px;
   align-items: center;
-  min-width: 1160px;
+  min-width: 980px;
   min-height: 48px;
   width: 100%;
   padding: 9px 10px;
@@ -961,8 +963,8 @@ select {
 }
 
 .personal-ledger-row {
-  grid-template-columns: 28px minmax(92px, 0.75fr) minmax(190px, 1.35fr) minmax(130px, 0.95fr) minmax(150px, 1fr) 72px minmax(330px, 1.7fr);
-  min-width: 930px;
+  grid-template-columns: 28px minmax(92px, 0.72fr) minmax(230px, 1.5fr) minmax(140px, 0.95fr) minmax(170px, 1fr) 72px;
+  min-width: 820px;
 }
 
 .master-ledger-row > span,
@@ -1043,20 +1045,20 @@ select {
 }
 
 .ledger-detail-panel {
-  min-width: 1160px;
+  min-width: 980px;
   padding: 8px 10px 12px;
   background: #f7faf8;
   border-bottom: 2px solid #dfe6e1;
 }
 
 .personal-ledger-table .ledger-detail-panel {
-  min-width: 930px;
+  min-width: 820px;
 }
 
 .ledger-detail-head,
 .ledger-serial-row {
   display: grid;
-  grid-template-columns: minmax(150px, 1fr) minmax(160px, 1fr) minmax(220px, 1.3fr) minmax(160px, 1fr) minmax(110px, 0.8fr);
+  grid-template-columns: minmax(150px, 0.9fr) minmax(160px, 0.9fr) minmax(220px, 1.2fr) minmax(155px, 0.9fr) minmax(110px, 0.65fr) minmax(330px, 1.6fr);
   gap: 8px;
   align-items: center;
   width: 100%;
@@ -1076,6 +1078,17 @@ select {
   border: 1px solid #dfe6e1;
   border-radius: 8px;
   text-align: left;
+}
+
+.ledger-file-btn {
+  min-height: 30px;
+  padding: 0 9px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 1px solid var(--tile-line-strong);
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 850;
 }
 
 .table-row {
