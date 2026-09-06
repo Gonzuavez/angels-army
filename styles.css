@@ -939,6 +939,47 @@ select {
   line-height: 1.45;
 }
 
+.ledger-hub-controls {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ledger-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.ledger-filter-card {
+  min-height: 104px;
+  padding: 14px;
+}
+
+.ledger-filter-bar {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.9fr) minmax(180px, 0.9fr) minmax(260px, 1.3fr) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 12px;
+  background: #edf3ef;
+  border: 2px solid var(--tile-line);
+  border-radius: 8px;
+}
+
+.ledger-filter-bar label {
+  display: grid;
+  gap: 5px;
+}
+
+.ledger-filter-bar label span {
+  color: #314136;
+  font-size: 0.75rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .master-ledger-table {
   overflow: auto;
   border: 2px solid var(--tile-line);
@@ -1078,6 +1119,15 @@ select {
   border: 1px solid #dfe6e1;
   border-radius: 8px;
   text-align: left;
+}
+
+.ledger-empty-state {
+  min-width: 980px;
+  padding: 18px;
+  color: var(--muted);
+  background: #ffffff;
+  font-weight: 800;
+  text-align: center;
 }
 
 .ledger-file-btn {
@@ -1896,7 +1946,8 @@ select {
   .compliance-summary,
   .permission-grid,
   .profile-layout,
-  .profile-form {
+  .profile-form,
+  .ledger-filter-bar {
     grid-template-columns: 1fr;
   }
 }
@@ -1907,6 +1958,7 @@ select {
   }
 
   .status-strip,
+  .ledger-status-grid,
   .quick-grid,
   .status-overview-grid,
   .section-status-strip,

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=25" />
+    <link rel="stylesheet" href="styles.css?v=26" />
   </head>
   <body>
     <div class="app-shell">
@@ -193,6 +193,58 @@
           <div class="master-ledger-note">
             <strong>The historical visibility bible</strong>
             <p>Supply SGT and PHRH start with LIN, nomenclature, NSN, part/model, quantity, section, and SHRH. Serial numbers, end user, location, custody status, historical records, and notes appear only after the LIN is opened.</p>
+          </div>
+          <div class="ledger-hub-controls" aria-label="Master ledger equipment status and filters">
+            <div class="ledger-status-grid" aria-label="Equipment status">
+              <button class="metric-card ledger-filter-card active" type="button" data-ledger-status="all">
+                <span class="metric-label">All Equipment</span>
+                <strong id="ledgerTotalCount">0</strong>
+                <small>Serialized assets in ecosystem</small>
+              </button>
+              <button class="metric-card ledger-filter-card" type="button" data-ledger-status="signed">
+                <span class="metric-label">Signed 2062</span>
+                <strong id="ledgerSignedCount">0</strong>
+                <small>Validated custody records</small>
+              </button>
+              <button class="metric-card ledger-filter-card" type="button" data-ledger-status="excess">
+                <span class="metric-label">Excess / Supply Room</span>
+                <strong id="ledgerExcessCount">0</strong>
+                <small>Open equipment available by approval</small>
+              </button>
+              <button class="metric-card ledger-filter-card danger" type="button" data-ledger-status="exception">
+                <span class="metric-label">Exceptions</span>
+                <strong id="ledgerExceptionCount">0</strong>
+                <small>Missing, pending, or correction actions</small>
+              </button>
+            </div>
+            <div class="ledger-filter-bar">
+              <label>
+                <span>Section / SHRH</span>
+                <select id="ledgerSectionFilter">
+                  <option value="all">All sections and SHRHs</option>
+                  <option value="ISB">ISB / SSG Cruz</option>
+                  <option value="NMB">NMB / SFC Mills</option>
+                  <option value="DCO">DCO / CW2 Novak</option>
+                  <option value="Excess / Supply Room">Excess / Supply Room</option>
+                </select>
+              </label>
+              <label>
+                <span>Equipment type</span>
+                <select id="ledgerTypeFilter">
+                  <option value="all">All equipment types</option>
+                  <option value="laptop">Laptops</option>
+                  <option value="monitor">Monitors</option>
+                  <option value="desktop">Desktops</option>
+                  <option value="server">Servers</option>
+                  <option value="encryption">Encryption devices</option>
+                </select>
+              </label>
+              <label>
+                <span>Search ledger</span>
+                <input id="ledgerSearch" type="search" placeholder="LIN, NSN, model, serial, user, location" />
+              </label>
+              <button id="ledgerClearFilters" class="ghost-btn" type="button">Clear Filters</button>
+            </div>
           </div>
           <div class="master-ledger-table" role="table" aria-label="Master equipment list">
             <div class="master-ledger-row master-ledger-head" role="row">
@@ -1070,6 +1122,6 @@ DELL5550-NEW02</textarea>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="app.js?v=35"></script>
+    <script src="app.js?v=36"></script>
   </body>
 </html>

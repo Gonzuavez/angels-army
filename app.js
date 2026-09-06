@@ -538,15 +538,23 @@ const masterEquipmentGroups = [
     part: "Dell Latitude 5550",
     section: "ISB",
     shrh: "SSG Cruz",
+    assets: [masterEquipmentRecords[0]],
+  },
+  {
+    lin: "LPT-5550",
+    nomenclature: "Dell Latitude 5550 Laptop",
+    nsn: "7021-01-RCCE-001",
+    part: "Dell Latitude 5550",
+    section: "Excess / Supply Room",
+    shrh: "Supply SGT / PHRH Controlled",
     assets: [
-      masterEquipmentRecords[0],
       {
         lin: "LPT-5550",
         nomenclature: "Dell Latitude 5550 Laptop",
         nsn: "7021-01-RCCE-001",
         part: "Dell Latitude 5550",
         serial: "DELL5550-EXC14",
-        endUser: "Excess / Supply Room",
+        endUser: "Unassigned excess",
         location: "Supply Room / POD-01 / Excess",
         status: "Open excess",
         file: {
@@ -853,9 +861,21 @@ let activeMetric = "all";
 let searchTerm = "";
 let activeScreen = "supply";
 let currentProfileSection = "ISB";
+let ledgerStatusFilter = "all";
+let ledgerSectionFilter = "all";
+let ledgerTypeFilter = "all";
+let ledgerSearchTerm = "";
 
 const rowsEl = document.querySelector("#supplyRows");
 const masterLedgerRowsEl = document.querySelector("#masterLedgerRows");
+const ledgerTotalCountEl = document.querySelector("#ledgerTotalCount");
+const ledgerSignedCountEl = document.querySelector("#ledgerSignedCount");
+const ledgerExcessCountEl = document.querySelector("#ledgerExcessCount");
+const ledgerExceptionCountEl = document.querySelector("#ledgerExceptionCount");
+const ledgerSectionFilterEl = document.querySelector("#ledgerSectionFilter");
+const ledgerTypeFilterEl = document.querySelector("#ledgerTypeFilter");
+const ledgerSearchEl = document.querySelector("#ledgerSearch");
+const ledgerClearFiltersBtn = document.querySelector("#ledgerClearFilters");
 const supplyPersonalRowsEl = document.querySelector("#supplyPersonalRows");
 const shrhPersonalRowsEl = document.querySelector("#shrhPersonalRows");
 const hrhPersonalRowsEl = document.querySelector("#hrhPersonalRows");
@@ -978,9 +998,77 @@ function renderMasterLedger() {
   if (!masterLedgerRowsEl) return;
   masterLedgerRowsEl.innerHTML = "";
 
-  masterEquipmentGroups.forEach((group) => {
+  updateLedgerStatusCounts();
+  const filteredGroups = visibleLedgerGroups();
+
+  filteredGroups.forEach((group) => {
     masterLedgerRowsEl.appendChild(createLedgerGroup(group, "master"));
   });
+
+  if (!filteredGroups.length) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "ledger-empty-state";
+    emptyState.textContent = "No equipment matches the selected ledger filters.";
+    masterLedgerRowsEl.appendChild(emptyState);
+  }
+}
+
+function updateLedgerStatusCounts() {
+  const allAssets = masterEquipmentGroups.flatMap((group) => group.assets);
+  const signedCount = allAssets.filter((asset) => asset.status.toLowerCase().includes("signed")).length;
+  const excessCount = allAssets.filter((asset) => asset.status.toLowerCase().includes("excess")).length;
+  const exceptionCount = allAssets.filter((asset) => isLedgerException(asset)).length;
+
+  if (ledgerTotalCountEl) ledgerTotalCountEl.textContent = allAssets.length;
+  if (ledgerSignedCountEl) ledgerSignedCountEl.textContent = signedCount;
+  if (ledgerExcessCountEl) ledgerExcessCountEl.textContent = excessCount;
+  if (ledgerExceptionCountEl) ledgerExceptionCountEl.textContent = exceptionCount;
+
+  document.querySelectorAll("[data-ledger-status]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.ledgerStatus === ledgerStatusFilter);
+  });
+}
+
+function visibleLedgerGroups() {
+  return masterEquipmentGroups
+    .map((group) => {
+      const sectionLabel = `${group.section} / ${group.shrh}`.toLowerCase();
+      const groupMatch =
+        ledgerSectionFilter === "all" ||
+        group.section === ledgerSectionFilter ||
+        sectionLabel.includes(ledgerSectionFilter.toLowerCase());
+
+      if (!groupMatch || !ledgerGroupMatchesType(group)) return null;
+
+      const visibleAssets = group.assets.filter((asset) => ledgerAssetMatches(group, asset));
+      if (!visibleAssets.length) return null;
+
+      return { ...group, assets: visibleAssets };
+    })
+    .filter(Boolean);
+}
+
+function ledgerGroupMatchesType(group) {
+  if (ledgerTypeFilter === "all") return true;
+  const text = `${group.nomenclature} ${group.part}`.toLowerCase();
+  if (ledgerTypeFilter === "encryption") return text.includes("encryption") || text.includes("taclane") || text.includes("kg-");
+  return text.includes(ledgerTypeFilter);
+}
+
+function ledgerAssetMatches(group, asset) {
+  const status = asset.status.toLowerCase();
+  const statusMatch =
+    ledgerStatusFilter === "all" ||
+    (ledgerStatusFilter === "signed" && status.includes("signed")) ||
+    (ledgerStatusFilter === "excess" && status.includes("excess")) ||
+    (ledgerStatusFilter === "exception" && isLedgerException(asset));
+  const haystack = `${group.section} ${group.shrh} ${group.lin} ${group.nomenclature} ${group.nsn} ${group.part} ${asset.serial} ${asset.endUser} ${asset.location} ${asset.status}`.toLowerCase();
+  return statusMatch && haystack.includes(ledgerSearchTerm);
+}
+
+function isLedgerException(asset) {
+  const status = asset.status.toLowerCase();
+  return status.includes("missing") || status.includes("pending") || status.includes("aar") || status.includes("correction");
 }
 
 function renderPersonalLedgers() {
@@ -1790,6 +1878,39 @@ function openWorkflow(title, template) {
 document.querySelector("#globalSearch").addEventListener("input", (event) => {
   searchTerm = event.target.value.trim().toLowerCase();
   renderRows();
+});
+
+document.querySelectorAll("[data-ledger-status]").forEach((button) => {
+  button.addEventListener("click", () => {
+    ledgerStatusFilter = button.dataset.ledgerStatus;
+    renderMasterLedger();
+  });
+});
+
+ledgerSectionFilterEl?.addEventListener("change", (event) => {
+  ledgerSectionFilter = event.target.value;
+  renderMasterLedger();
+});
+
+ledgerTypeFilterEl?.addEventListener("change", (event) => {
+  ledgerTypeFilter = event.target.value;
+  renderMasterLedger();
+});
+
+ledgerSearchEl?.addEventListener("input", (event) => {
+  ledgerSearchTerm = event.target.value.trim().toLowerCase();
+  renderMasterLedger();
+});
+
+ledgerClearFiltersBtn?.addEventListener("click", () => {
+  ledgerStatusFilter = "all";
+  ledgerSectionFilter = "all";
+  ledgerTypeFilter = "all";
+  ledgerSearchTerm = "";
+  if (ledgerSectionFilterEl) ledgerSectionFilterEl.value = "all";
+  if (ledgerTypeFilterEl) ledgerTypeFilterEl.value = "all";
+  if (ledgerSearchEl) ledgerSearchEl.value = "";
+  renderMasterLedger();
 });
 
 document.querySelector("#unitSelect").addEventListener("change", (event) => {
