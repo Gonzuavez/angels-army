@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
+    <link rel="stylesheet" href="styles.css?v=24" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="side-nav" aria-label="Primary">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">A</div>
+          <div>
+            <h1>A.N.G.E.L.S.</h1>
+            <p>Supply Operations</p>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" type="button" data-view="supply">
+            <span class="icon block-icon" aria-hidden="true"></span>
+            Supply SGT
+          </button>
+          <button class="nav-item" type="button" data-view="phrh">
+            <span class="icon chart-icon" aria-hidden="true"></span>
+            PHRH
+          </button>
+          <button class="nav-item" type="button" data-view="ledger">
+            <span class="icon paper-icon" aria-hidden="true"></span>
+            Master Ledger
+          </button>
+          <button class="nav-item" type="button" data-view="shrh">
+            <span class="icon box-icon" aria-hidden="true"></span>
+            SHRH
+          </button>
+          <button class="nav-item" type="button" data-view="hrh">
+            <span class="icon paper-icon" aria-hidden="true"></span>
+            HRH User
+          </button>
+          <button class="nav-item" type="button" data-view="profile">
+            <span class="icon paper-icon" aria-hidden="true"></span>
+            Profile
+          </button>
+          <button class="nav-item" type="button" data-view="inventory">
+            <span class="icon box-icon" aria-hidden="true"></span>
+            Inventory
+          </button>
+          <button class="nav-item" type="button" data-view="excess">
+            <span class="icon box-icon" aria-hidden="true"></span>
+            Excess Assets
+          </button>
+          <button class="nav-item" type="button" data-view="receipts">
+            <span class="icon paper-icon" aria-hidden="true"></span>
+            Hand Receipts
+          </button>
+          <button class="nav-item" type="button" data-view="missing">
+            <span class="icon alert-icon" aria-hidden="true"></span>
+            Missing Equipment
+          </button>
+          <button class="nav-item" type="button" data-view="workorders">
+            <span class="icon wrench-icon" aria-hidden="true"></span>
+            Signatures
+          </button>
+          <button class="nav-item" type="button" data-view="reports">
+            <span class="icon chart-icon" aria-hidden="true"></span>
+            Reports
+          </button>
+          <button class="nav-item" type="button" data-view="documents">
+            <span class="icon paper-icon" aria-hidden="true"></span>
+            Documents
+          </button>
+        </nav>
+
+        <div class="side-footer">
+          <span class="signal-dot"></span>
+          Live sync ready
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="top-bar">
+          <div>
+            <p class="eyebrow">Supply SGT Dashboard</p>
+            <h2>RCC-E (Regional Cyber Center - Europe)</h2>
+          </div>
+          <div class="top-actions">
+            <label class="search-field">
+              <span class="search-icon" aria-hidden="true"></span>
+              <input id="globalSearch" type="search" placeholder="Search LIN, NSN, item, holder" />
+            </label>
+            <select id="unitSelect" aria-label="Select unit">
+              <option>RCC-E</option>
+              <option>ISB</option>
+              <option>NMB</option>
+              <option>TCO</option>
+              <option>OPS</option>
+              <option>Arms Room</option>
+              <option>IMO</option>
+              <option>SMB</option>
+              <option>DCO</option>
+            </select>
+            <button id="newIssueBtn" class="primary-btn" type="button">
+              <span class="plus-icon" aria-hidden="true"></span>
+              New Issue
+            </button>
+          </div>
+        </header>
+
+        <section class="brand-banner" aria-label="A.N.G.E.L.S. brand banner" data-screens="supply phrh ledger shrh hrh">
+          <img src="assets/angels-logo-banner.png" alt="A.N.G.E.L.S. Army Network Global Equipment Logistics System banner" />
+        </section>
+
+        <section class="status-strip" aria-label="Dashboard totals" data-screens="supply phrh">
+          <button class="metric-card active" type="button" data-filter="all">
+            <span class="metric-label">Readiness</span>
+            <strong>93%</strong>
+            <small>Equipment with signed 2062</small>
+          </button>
+          <button class="metric-card" type="button" data-screen-link="ledger">
+            <span class="metric-label">Master Ledger Hub</span>
+            <strong>5</strong>
+            <small>LIN groups by section and SHRH</small>
+          </button>
+          <button class="metric-card" type="button" data-filter="pending" data-jump-tab="pending">
+            <span class="metric-label">Pending Signatures</span>
+            <strong>18</strong>
+            <small>Second signature or approval</small>
+          </button>
+          <button class="metric-card" type="button" data-filter="notifications" data-template="notifications">
+            <span class="metric-label">Email Notices</span>
+            <strong>12</strong>
+            <small>Automatic alerts sent today</small>
+          </button>
+          <button class="metric-card warning" type="button" data-filter="aar-changes" data-jump-tab="pending">
+            <span class="metric-label">AAR Change Requests</span>
+            <strong>1</strong>
+            <small>Serial or nomenclature corrections</small>
+          </button>
+          <button class="metric-card warning" type="button" data-filter="location-approvals" data-jump-tab="pending">
+            <span class="metric-label">Location Approvals</span>
+            <strong>6</strong>
+            <small>Required before transactions</small>
+          </button>
+          <button class="metric-card warning" type="button" data-filter="missing" data-jump-tab="missing">
+            <span class="metric-label">Missing Equipment</span>
+            <strong>7</strong>
+            <small>End user reported</small>
+          </button>
+          <button class="metric-card" type="button" data-filter="inventory">
+            <span class="metric-label">Inventory</span>
+            <strong>42%</strong>
+            <small id="inventoryMetricLabel">Auto monthly HRH report</small>
+          </button>
+          <button class="metric-card" type="button" data-filter="equipment-requests" data-jump-tab="equipreq">
+            <span class="metric-label">Equipment Requests</span>
+            <strong>8</strong>
+            <small>Property book items</small>
+          </button>
+          <button class="metric-card" type="button" data-filter="hr-actions" data-jump-tab="transfer">
+            <span class="metric-label">HR Actions</span>
+            <strong>23</strong>
+            <small>Transfers and turn-ins</small>
+          </button>
+          <button class="metric-card" type="button" data-filter="excess" data-jump-tab="excess">
+            <span class="metric-label">Open Equipment</span>
+            <strong>14</strong>
+            <small>Excess assets in supply room</small>
+          </button>
+          <button class="metric-card" type="button" data-filter="supplies" data-jump-tab="expendable">
+            <span class="metric-label">Open Supplies</span>
+            <strong>41</strong>
+            <small>Expendables on shelf</small>
+          </button>
+          <button class="metric-card danger" type="button" data-filter="reporting" data-panel="inventory-reporting">
+            <span class="metric-label">Not Reported</span>
+            <strong>9</strong>
+            <small>Past inventory suspense</small>
+          </button>
+        </section>
+
+        <section class="panel master-ledger-panel" aria-label="Master equipment ledger" data-screens="ledger">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Master Equipment Ledger Hub</p>
+              <h3>LIN-Level Dashboard by SHRH, Section, and Excess</h3>
+            </div>
+            <button id="openMasterLedgerBtn" class="ghost-btn" type="button">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Open First File Cabinet
+            </button>
+          </div>
+          <div class="master-ledger-note">
+            <strong>The historical visibility bible</strong>
+            <p>Supply SGT and PHRH start with LIN, nomenclature, NSN, part/model, quantity, section, and SHRH. Serial numbers, end user, location, custody status, historical records, and notes appear only after the LIN is opened.</p>
+          </div>
+          <div class="master-ledger-table" role="table" aria-label="Master equipment list">
+            <div class="master-ledger-row master-ledger-head" role="row">
+              <span>LIN</span>
+              <span>Nomenclature</span>
+              <span>NSN</span>
+              <span>Part / Model</span>
+              <span>EA</span>
+              <span>Section / SHRH</span>
+              <span>Actions</span>
+            </div>
+            <div id="masterLedgerRows"></div>
+          </div>
+        </section>
+
+        <section class="panel access-panel" aria-label="Permission dashboards" data-screens="supply phrh">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Prototype Screens</p>
+              <h3 id="roleTitle">Supply SGT Command Dashboard</h3>
+            </div>
+            <div class="role-switcher" role="tablist" aria-label="Dashboard role">
+              <button class="role-tab active" type="button" data-go-screen="supply">Supply SGT</button>
+              <button class="role-tab" type="button" data-go-screen="phrh">PHRH</button>
+              <button class="role-tab" type="button" data-go-screen="shrh">SHRH</button>
+              <button class="role-tab" type="button" data-go-screen="hrh">HRH End User</button>
+            </div>
+          </div>
+          <div id="permissionCards" class="permission-grid"></div>
+        </section>
+
+        <section class="panel status-visibility-panel" aria-label="Personnel duty status visibility" data-screens="supply phrh">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Personnel Status</p>
+              <h3>Ecosystem Duty Status Visibility</h3>
+            </div>
+          </div>
+          <div class="status-overview-grid">
+            <button class="status-card" type="button" data-person-status="On site"><strong>128</strong><span>On site</span></button>
+            <button class="status-card" type="button" data-person-status="Teleworking"><strong>14</strong><span>Teleworking</span></button>
+            <button class="status-card warning" type="button" data-person-status="On leave"><strong>9</strong><span>On leave</span></button>
+            <button class="status-card warning" type="button" data-person-status="TDY"><strong>6</strong><span>TDY</span></button>
+            <button class="status-card danger" type="button" data-person-status="Outprocessing"><strong>4</strong><span>Outprocessing</span></button>
+          </div>
+          <div class="permission-grid">
+            <div class="permission-card"><span>Supply SGT / PHRH</span><p>Can see the duty status for every HRH and SHRH across RCC-E.</p></div>
+            <div class="permission-card"><span>SHRH</span><p>Can see duty status only for HRH end users assigned under that SHRH section.</p></div>
+            <div class="permission-card"><span>Status choices</span><p>On site, teleworking, on leave, TDY, and outprocessing all affect equipment location awareness and inventory follow-up.</p></div>
+          </div>
+        </section>
+
+        <section class="panel personal-equipment-panel" aria-label="Supply SGT and PHRH personal equipment" data-screens="supply phrh">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Personal End User Custody</p>
+              <h3>Equipment I Directly Use</h3>
+            </div>
+            <button class="ghost-btn personal-equipment-action" type="button" data-personal-role="Supply SGT / PHRH">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Open My 2062
+            </button>
+          </div>
+          <div class="personal-ledger-table" role="table" aria-label="Supply SGT and PHRH personal custody list">
+            <div class="personal-ledger-row personal-ledger-head" role="row">
+              <span>LIN</span>
+              <span>Nomenclature</span>
+              <span>NSN</span>
+              <span>Part / Model</span>
+              <span>EA</span>
+              <span>Actions</span>
+            </div>
+            <div id="supplyPersonalRows"></div>
+          </div>
+          <div class="permission-card section-status-note">
+            <span>End user rule</span>
+            <p>Supply SGT and PHRH users still have personal equipment custody, location, and signed-record tracking separate from the equipment they manage for the ecosystem.</p>
+          </div>
+        </section>
+
+        <section class="panel equipment-intake-panel" aria-label="Equipment intake and import" data-screens="supply phrh">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Equipment Intake</p>
+              <h3>Add Equipment to the Ecosystem</h3>
+            </div>
+            <div class="top-actions">
+              <button id="manualEquipmentBtn" class="secondary-btn" type="button">
+                <span class="plus-icon" aria-hidden="true"></span>
+                Manual Entry
+              </button>
+              <button id="uploadEquipmentBtn" class="primary-btn" type="button">
+                <span class="download-icon" aria-hidden="true"></span>
+                Upload GCSS-Army File
+              </button>
+            </div>
+          </div>
+          <div class="equipment-intake-grid">
+            <label>
+              <span>Amount</span>
+              <input type="number" value="1" min="1" />
+            </label>
+            <label>
+              <span>Nomenclature</span>
+              <input type="text" value="Dell Latitude 5550 Laptop" />
+            </label>
+            <label>
+              <span>NSN</span>
+              <input type="text" value="7021-01-RCCE-001" />
+            </label>
+            <label>
+              <span>Part Number / Make / Model</span>
+              <input type="text" value="Dell Latitude 5550" />
+            </label>
+            <label class="wide-field">
+              <span>Serial Numbers, if applicable</span>
+              <textarea>DELL5550-NEW01
+DELL5550-NEW02</textarea>
+            </label>
+            <label class="wide-field">
+              <span>Source Document</span>
+              <input type="text" value="GCSS-Army equipment export, Excel, CSV, PDF, or other approved upload" />
+            </label>
+          </div>
+          <div class="permission-grid">
+            <div class="permission-card"><span>Manual</span><p>Supply SGT/PHRH can add one item or a small batch by entering amount, nomenclature, NSN, part number/make/model, and serials.</p></div>
+            <div class="permission-card"><span>Upload</span><p>GCSS-Army Excel, CSV, PDF, or other approved documents can update the property listing automatically after review.</p></div>
+            <div class="permission-card"><span>Validation</span><p>Serialized property is checked before it appears as open equipment, assigned equipment, or property book inventory.</p></div>
+          </div>
+        </section>
+
+        <section class="panel role-dashboard-panel is-hidden" data-screens="shrh" aria-label="SHRH dashboard">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">SHRH Dashboard</p>
+              <h3>Section Equipment and End User Custody</h3>
+            </div>
+            <div class="top-actions">
+              <select id="shrhScreenSection" aria-label="SHRH section">
+                <option>ISB</option>
+                <option>NMB</option>
+                <option>TCO</option>
+                <option>OPS</option>
+                <option>Arms Room</option>
+                <option>IMO</option>
+                <option>SMB</option>
+                <option>DCO</option>
+              </select>
+              <button class="primary-btn workflow-action" type="button" data-action="Initiate SHRH section inventory report" data-template="inventory">
+                <span class="plus-icon" aria-hidden="true"></span>
+                Initiate Inventory Report
+              </button>
+            </div>
+          </div>
+          <div class="role-dashboard-grid">
+            <button class="metric-card active" type="button" data-filter="inventory">
+              <span class="metric-label">My Section</span>
+              <strong>93%</strong>
+              <small>Equipment with signed 2062</small>
+            </button>
+            <button class="metric-card" type="button" data-filter="pending" data-jump-tab="pending">
+              <span class="metric-label">End User Signatures</span>
+              <strong>5</strong>
+              <small>Waiting on HRH action</small>
+            </button>
+            <button class="metric-card warning" type="button" data-filter="location-approvals" data-jump-tab="pending">
+              <span class="metric-label">Location Approvals</span>
+              <strong>2</strong>
+              <small>My section only</small>
+            </button>
+            <button class="metric-card" type="button" data-filter="excess" data-jump-tab="excess">
+              <span class="metric-label">Open Equipment</span>
+              <strong>14</strong>
+              <small>Request from Supply</small>
+            </button>
+            <button class="metric-card warning" type="button" data-filter="supplies" data-jump-tab="expendable">
+              <span class="metric-label">Expendables</span>
+              <strong>41</strong>
+              <small>Office supplies available</small>
+            </button>
+          </div>
+          <div class="section-status-strip" aria-label="SHRH section personnel status">
+            <button class="status-card" type="button" data-person-status="On site"><strong>21</strong><span>On site</span></button>
+            <button class="status-card" type="button" data-person-status="Teleworking"><strong>4</strong><span>Teleworking</span></button>
+            <button class="status-card warning" type="button" data-person-status="On leave"><strong>2</strong><span>On leave</span></button>
+            <button class="status-card warning" type="button" data-person-status="TDY"><strong>1</strong><span>TDY</span></button>
+            <button class="status-card danger" type="button" data-person-status="Outprocessing"><strong>1</strong><span>Outprocessing</span></button>
+          </div>
+          <div class="permission-card section-status-note">
+            <span>SHRH visibility</span>
+            <p>This view only shows HRH end users under the selected SHRH section.</p>
+          </div>
+          <div class="role-doc-section">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow">Personal End User Custody</p>
+                <h3>Equipment I Directly Use</h3>
+              </div>
+              <button class="ghost-btn personal-equipment-action" type="button" data-personal-role="SHRH">
+                <span class="paper-icon" aria-hidden="true"></span>
+                Open My 2062
+              </button>
+            </div>
+            <div class="personal-ledger-table" role="table" aria-label="SHRH personal custody list">
+              <div class="personal-ledger-row personal-ledger-head" role="row">
+                <span>LIN</span>
+                <span>Nomenclature</span>
+                <span>NSN</span>
+                <span>Part / Model</span>
+                <span>EA</span>
+                <span>Actions</span>
+              </div>
+              <div id="shrhPersonalRows"></div>
+            </div>
+            <div class="permission-card section-status-note">
+              <span>End user rule</span>
+              <p>The SHRH is also an end user. Their personally used equipment, location, and signed forms are tracked separately from the equipment they manage for their section.</p>
+            </div>
+          </div>
+          <div class="quick-grid compact-actions">
+            <button class="quick-card" type="button" data-action="Initiate SHRH section inventory report" data-template="inventory"><strong>Inventory Report</strong><small>On-demand for my section only</small></button>
+            <button class="quick-card" type="button" data-action="Approve location change request" data-template="location"><strong>Location Approval</strong><small>Approve before transactions continue</small></button>
+            <button class="quick-card" type="button" data-action="New HR transfer request" data-template="transfer"><strong>HR Transfer</strong><small>Move equipment to another SHRH or HRH</small></button>
+            <button class="quick-card" type="button" data-action="New turn-in equipment request" data-template="turnin"><strong>Turn-In</strong><small>Send equipment to Supply SGT</small></button>
+            <button class="quick-card" type="button" data-action="New equipment property request" data-template="equipment"><strong>Equipment Request</strong><small>Request property book items</small></button>
+            <button class="quick-card" type="button" data-action="Request AAR data correction" data-template="aar"><strong>AAR Change</strong><small>Correct serial or nomenclature</small></button>
+            <button class="quick-card" type="button" data-action="Report Found on Installation equipment" data-template="foi"><strong>Report FOI</strong><small>Unidentified found equipment</small></button>
+          </div>
+          <div class="role-doc-section">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow">SHRH Filing System</p>
+                <h3>Signed Records and Section Documents</h3>
+              </div>
+            </div>
+            <div class="document-grid role-document-grid">
+              <button class="document-card locked-doc" type="button" data-doc="SHRH Hand Receipt Record" data-doc-scope="shrh" data-doc-state="locked">
+                <strong>SHRH Hand Receipt</strong>
+                <span>Signed section custody record. Locked after upload until Supply SGT/PHRH deletes it.</span>
+              </button>
+              <button class="document-card locked-doc" type="button" data-doc="End User DA Form 2062 Packets" data-doc-scope="shrh" data-doc-state="locked">
+                <strong>End User 2062 Packets</strong>
+                <span>All signed end user custody packets for equipment assigned under this SHRH.</span>
+              </button>
+              <button class="document-card locked-doc" type="button" data-doc="SHRH DA Form 3161 History" data-doc-scope="shrh" data-doc-state="locked">
+                <strong>DA Form 3161 History</strong>
+                <span>Completed transfer handshakes affecting this SHRH account.</span>
+              </button>
+              <button class="document-card locked-doc" type="button" data-doc="SHRH Missing Equipment Packets" data-doc-scope="shrh" data-doc-state="locked">
+                <strong>Missing Equipment Packets</strong>
+                <span>Signed missing-equipment records escalated from HRH to SHRH to Supply SGT/PHRH.</span>
+              </button>
+            </div>
+            <div class="document-grid role-document-grid">
+              <button class="document-card shared-doc" type="button" data-doc="Supply Request Forms" data-doc-scope="shared" data-doc-state="download">
+                <strong>Supply Request Forms</strong>
+                <span>Download approved equipment, turn-in, and expendable supply forms.</span>
+              </button>
+              <button class="document-card shared-doc" type="button" data-doc="Published SOPs" data-doc-scope="shared" data-doc-state="download">
+                <strong>SOPs</strong>
+                <span>Download current hand receipt, transfer, inventory, and outprocessing SOPs.</span>
+              </button>
+              <button class="document-card shared-doc" type="button" data-doc="Published Regulations" data-doc-scope="shared" data-doc-state="download">
+                <strong>Regulations</strong>
+                <span>Download regulations and local policy references released to SHRH dashboards.</span>
+              </button>
+              <button class="document-card shared-doc" type="button" data-doc="Building Blueprint and POD Locator" data-doc-scope="shared" data-doc-state="download">
+                <strong>Blueprint / POD Locator</strong>
+                <span>Download current room, POD, and equipment location reference.</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel role-dashboard-panel is-hidden" data-screens="hrh" aria-label="HRH end user dashboard">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">HRH End User Dashboard</p>
+              <h3>My Equipment, Location, and Requests</h3>
+            </div>
+            <div class="status-actions" aria-label="Set HRH duty status">
+              <button class="secondary-btn status-action active" type="button" data-status-value="On site">On Site</button>
+              <button class="secondary-btn status-action" type="button" data-status-value="Teleworking">Teleworking</button>
+              <button class="secondary-btn status-action" type="button" data-status-value="On leave">Leave</button>
+              <button class="secondary-btn status-action" type="button" data-status-value="TDY">TDY</button>
+              <button class="secondary-btn status-action" type="button" data-status-value="Outprocessing">Outprocessing</button>
+            </div>
+          </div>
+          <div class="role-dashboard-grid">
+            <button class="metric-card active" type="button" data-filter="all" data-jump-tab="custody">
+              <span class="metric-label">Assigned Equipment</span>
+              <strong>3</strong>
+              <small>Laptop and two monitors</small>
+            </button>
+            <button class="metric-card" type="button" data-filter="pending" data-jump-tab="pending">
+              <span class="metric-label">Pending Signature</span>
+              <strong>1</strong>
+              <small>Needs my action</small>
+            </button>
+            <button class="metric-card" type="button" data-filter="excess" data-jump-tab="excess">
+              <span class="metric-label">Request Equipment</span>
+              <strong>14</strong>
+              <small>Open excess assets</small>
+            </button>
+            <button class="metric-card" type="button" data-filter="supplies" data-jump-tab="expendable">
+              <span class="metric-label">Office Supplies</span>
+              <strong>41</strong>
+              <small>Request expendables</small>
+            </button>
+          </div>
+          <div class="permission-grid">
+            <div class="permission-card"><span>Assigned SHRH</span><p>SSG Cruz - ISB / DSN 555-0188 / ssg.cruz@example.mil. This is who the user turns equipment in to.</p></div>
+            <div class="permission-card"><span>Custody Proof</span><p>Military, DOD civilians, and Local Nationals use DA Form 2062. Contractors use a statement or memo of understanding.</p></div>
+            <div class="permission-card"><span>Self-Reporting</span><p>End users can update room, POD, equipment location notes, duty status, and inventory responses.</p></div>
+          </div>
+          <div class="role-doc-section personal-custody-section">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow">Personal End User Custody</p>
+                <h3>My LIN-Level Equipment</h3>
+              </div>
+            </div>
+            <div class="personal-ledger-table" role="table" aria-label="HRH personal custody list">
+              <div class="personal-ledger-row personal-ledger-head" role="row">
+                <span>LIN</span>
+                <span>Nomenclature</span>
+                <span>NSN</span>
+                <span>Part / Model</span>
+                <span>EA</span>
+                <span>Actions</span>
+              </div>
+              <div id="hrhPersonalRows"></div>
+            </div>
+          </div>
+          <div class="quick-grid compact-actions">
+            <button class="quick-card" type="button" data-action="Request equipment while inprocessing" data-template="equipment"><strong>Request Equipment</strong><small>Ask SHRH for property book items</small></button>
+            <button class="quick-card" type="button" data-action="Request turn-in while outprocessing" data-template="turnin"><strong>Turn-In</strong><small>Return equipment to SHRH</small></button>
+            <button class="quick-card" type="button" data-action="Start HRH transfer handshake" data-template="transfer"><strong>Transfer</strong><small>Generate DA Form 3161</small></button>
+            <button class="quick-card" type="button" data-action="New expendable supply request" data-template="expendable"><strong>Supplies</strong><small>Request expendables</small></button>
+            <button class="quick-card" type="button" data-action="Request AAR data correction" data-template="aar"><strong>AAR Change</strong><small>Correct serial or nomenclature</small></button>
+            <button class="quick-card" type="button" data-action="Report Found on Installation equipment" data-template="foi"><strong>Report FOI</strong><small>Unidentified found equipment</small></button>
+          </div>
+          <div class="role-doc-section">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow">HRH Filing System</p>
+                <h3>My Signed Forms and Approved Downloads</h3>
+              </div>
+            </div>
+            <div class="document-grid role-document-grid">
+              <button class="document-card locked-doc" type="button" data-doc="My DA Form 2062" data-doc-scope="hrh" data-doc-state="locked">
+                <strong>My DA Form 2062</strong>
+                <span>Laptop and monitor custody record. Locked after signature and upload.</span>
+              </button>
+              <button class="document-card locked-doc" type="button" data-doc="My DA Form 3161 Transfers" data-doc-scope="hrh" data-doc-state="locked">
+                <strong>My DA Form 3161</strong>
+                <span>Signed transfer handshakes involving this end user's equipment.</span>
+              </button>
+              <button class="document-card locked-doc" type="button" data-doc="Duty Status and Location Statements" data-doc-scope="hrh" data-doc-state="locked">
+                <strong>Location Statements</strong>
+                <span>Uploaded self-reports for room moves, POD updates, telework, leave, TDY, and outprocessing status.</span>
+              </button>
+              <button class="document-card locked-doc" type="button" data-doc="Statement or Memo of Understanding" data-doc-scope="hrh" data-doc-state="locked">
+                <strong>Statement / Memo</strong>
+                <span>Visible when contractor equipment acknowledgment applies.</span>
+              </button>
+            </div>
+            <div class="document-grid role-document-grid">
+              <button class="document-card shared-doc" type="button" data-doc="Supply Request Forms" data-doc-scope="shared" data-doc-state="download">
+                <strong>Supply Request Forms</strong>
+                <span>Download approved forms for equipment, turn-in, and expendable supply requests.</span>
+              </button>
+              <button class="document-card shared-doc" type="button" data-doc="Published SOPs" data-doc-scope="shared" data-doc-state="download">
+                <strong>SOPs</strong>
+                <span>Download current procedures released to end users.</span>
+              </button>
+              <button class="document-card shared-doc" type="button" data-doc="Published Regulations" data-doc-scope="shared" data-doc-state="download">
+                <strong>Regulations</strong>
+                <span>Download approved accountability and custody references.</span>
+              </button>
+              <button class="document-card shared-doc" type="button" data-doc="Building Blueprint and POD Locator" data-doc-scope="shared" data-doc-state="download">
+                <strong>Blueprint / POD Locator</strong>
+                <span>Download current room, POD, and equipment location reference.</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="profilePanel" class="panel profile-panel is-hidden" aria-label="User profile and records" data-screens="profile">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Profile Setup</p>
+              <h3>User Profile, Location, and Records</h3>
+            </div>
+            <button id="profileSaveBtn" class="primary-btn" type="button">
+              <span class="download-icon" aria-hidden="true"></span>
+              Save Profile
+            </button>
+          </div>
+
+          <div class="profile-layout">
+            <form class="profile-form" aria-label="Create profile">
+              <label>
+                <span>Role</span>
+                <select id="profileRole">
+                  <option>HRH End User</option>
+                  <option>SHRH</option>
+                  <option>PHRH</option>
+                  <option>Supply SGT</option>
+                </select>
+              </label>
+              <label>
+                <span>Personnel Type</span>
+                <select id="personnelType">
+                  <option>Military</option>
+                  <option>DOD Civilian</option>
+                  <option>Contractor</option>
+                  <option>Local National</option>
+                </select>
+              </label>
+              <label>
+                <span>First Name</span>
+                <input id="firstName" type="text" value="James" />
+              </label>
+              <label>
+                <span>Last Name</span>
+                <input id="lastName" type="text" value="Hines" />
+              </label>
+              <label>
+                <span>Email Address</span>
+                <input id="emailAddress" type="email" value="james.hines.mil@example.mil" />
+              </label>
+              <label>
+                <span>DSN / Phone</span>
+                <input id="phoneNumber" type="tel" value="DSN 555-0142" />
+              </label>
+              <label>
+                <span>DOD ID Number</span>
+                <input id="dodIdNumber" type="text" value="1234567890" />
+              </label>
+              <label>
+                <span>Section</span>
+                <select id="sectionSelect">
+                  <option>ISB</option>
+                  <option>NMB</option>
+                  <option>TCO</option>
+                  <option>OPS</option>
+                  <option>Arms Room</option>
+                  <option>IMO</option>
+                  <option>SMB</option>
+                  <option>DCO</option>
+                </select>
+              </label>
+              <label>
+                <span>ID Card Expiration</span>
+                <input id="idExpiration" type="date" value="2027-05-22" />
+              </label>
+              <label>
+                <span>Room Number</span>
+                <input id="roomNumber" type="text" value="B-214" />
+              </label>
+              <label>
+                <span>POD Number</span>
+                <input id="podNumber" type="text" value="POD-07" />
+              </label>
+              <label class="wide-field">
+                <span>Equipment Location Details</span>
+                <textarea id="locationDetails">Laptop normally stored in locked desk drawer. Two monitors remain on assigned workstation.</textarea>
+              </label>
+              <label class="wide-field">
+                <span>Notes</span>
+                <textarea id="profileNotes">User is onboarding this week and may move from B-214 to B-219 after network account setup.</textarea>
+              </label>
+            </form>
+
+            <aside class="profile-summary" aria-label="Profile summary">
+              <div class="telework-card">
+                <div>
+                  <span class="eyebrow">Daily Self Report</span>
+                  <strong id="teleworkStatus">On site</strong>
+                  <p>End users are responsible for self-reporting whether they are on site, teleworking, on leave, TDY, or outprocessing.</p>
+                </div>
+                <div class="status-actions" aria-label="Set profile duty status">
+                  <button id="teleworkToggle" class="secondary-btn status-action active" type="button" data-status-value="On site">On Site</button>
+                  <button class="secondary-btn status-action" type="button" data-status-value="Teleworking">Teleworking</button>
+                  <button class="secondary-btn status-action" type="button" data-status-value="On leave">Leave</button>
+                  <button class="secondary-btn status-action" type="button" data-status-value="TDY">TDY</button>
+                  <button class="secondary-btn status-action" type="button" data-status-value="Outprocessing">Outprocessing</button>
+                </div>
+              </div>
+
+              <div class="assigned-card">
+                <span class="eyebrow">Auto-Assigned SHRH</span>
+                <strong id="assignedShrh">SSG Cruz</strong>
+                <p id="assignedShrhContact">ISB / DSN 555-0188 / ssg.cruz@example.mil</p>
+              </div>
+
+              <div class="custody-rule-card">
+                <span class="eyebrow">Signature Rule</span>
+                <strong id="signatureRule">DA Form 2062 required</strong>
+                <p id="signatureRuleText">Military, DOD civilians, and Local Nationals can sign for equipment. Contractors use a FAR-aligned statement or memo of understanding.</p>
+              </div>
+
+              <div class="notification-card">
+                <span class="eyebrow">Email Notifications</span>
+                <strong>Automatic alerts enabled</strong>
+                <p>System sends email to the user's profile address for pending inventories, signature requests, approvals, rejections, overdue actions, AAR changes, FOI updates, and document availability.</p>
+              </div>
+            </aside>
+          </div>
+
+          <div class="records-section">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow">Profile Filing System</p>
+                <h3>Signed Forms, SOPs, Regulations, and Request Forms</h3>
+              </div>
+            </div>
+            <div class="record-grid">
+              <button class="record-card" type="button" data-record="DA Form 2062">
+                <strong>DA Form 2062</strong>
+                <span>Laptop and two monitors signed 20 May 2026</span>
+              </button>
+              <button class="record-card" type="button" data-record="DA Form 3161">
+                <strong>DA Form 3161</strong>
+                <span>Temporary transfer handshakes and movement history</span>
+              </button>
+              <button class="record-card" type="button" data-record="Memo / Statement of Understanding">
+                <strong>Memo / Statement</strong>
+                <span>Contractor FAR-aligned understanding when applicable</span>
+              </button>
+              <button class="record-card" type="button" data-record="SOPs and Regulations">
+                <strong>SOPs and Regulations</strong>
+                <span>Current versions maintained by Supply SGT/PHRH</span>
+              </button>
+              <button class="record-card" type="button" data-record="Request Forms">
+                <strong>Request Forms</strong>
+                <span>Equipment property requests, turn-ins, expendable supplies, and missing equipment</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="blueprint-section">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow">Building Blueprint</p>
+                <h3>Room and POD Locator</h3>
+              </div>
+              <button id="blueprintDocsBtn" class="ghost-btn" type="button">
+                <span class="paper-icon" aria-hidden="true"></span>
+                Blueprint Notes
+              </button>
+            </div>
+            <div class="blueprint-layout">
+              <div class="blueprint-map" aria-label="Building blueprint showing POD numbers">
+                <button class="pod-room room-a" type="button" data-room="B-201" data-pod="POD-01">B-201<br />POD-01</button>
+                <button class="pod-room room-b" type="button" data-room="B-214" data-pod="POD-07">B-214<br />POD-07</button>
+                <button class="pod-room room-c" type="button" data-room="B-219" data-pod="POD-08">B-219<br />POD-08</button>
+                <button class="pod-room room-d" type="button" data-room="C-102" data-pod="POD-12">C-102<br />POD-12</button>
+                <button class="pod-room room-e" type="button" data-room="C-118" data-pod="POD-14">C-118<br />POD-14</button>
+                <div class="hallway horizontal">Main Hall</div>
+                <div class="hallway vertical">Stair / Exit</div>
+              </div>
+              <div class="blueprint-notes">
+                <strong>Equipment location notes</strong>
+                <p id="blueprintNoteText">B-214 / POD-07: Laptop stored in locked desk drawer. Two monitors remain on assigned workstation.</p>
+                <label>
+                  <span>Additional location note</span>
+                  <textarea id="blueprintNotesInput">If user teleworks, laptop travels home but monitors stay in POD-07. Leave, TDY, and outprocessing status is visible to authorized dashboards.</textarea>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="operations-grid" data-screens="excess receipts missing workorders reports">
+          <div class="panel main-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Common Operating Picture</p>
+                <h3 id="viewTitle">Accountability Focus</h3>
+              </div>
+              <div class="segmented" role="tablist" aria-label="Board view">
+                <button class="segment active" type="button" data-tab="sensitive">Sensitive Items</button>
+                <button class="segment" type="button" data-tab="property">Property Book</button>
+                <button class="segment" type="button" data-tab="pending">Pending Signatures</button>
+                <button class="segment" type="button" data-tab="missing">Missing Equipment</button>
+                <button class="segment" type="button" data-tab="transfer">HR Transfers</button>
+                <button class="segment" type="button" data-tab="turnin">Turn-In</button>
+                <button class="segment" type="button" data-tab="equipreq">Equipment Requests</button>
+                <button class="segment" type="button" data-tab="excess">Excess Assets</button>
+                <button class="segment" type="button" data-tab="expendable">Expendable Supplies</button>
+                <button class="segment" type="button" data-tab="custody">Custody Forms</button>
+              </div>
+            </div>
+
+            <div class="table-toolbar">
+              <div class="status-filters" aria-label="Status filters">
+                <button class="pill active" type="button" data-status="all">All</button>
+                <button class="pill" type="button" data-status="green">Green</button>
+                <button class="pill" type="button" data-status="amber">Amber</button>
+                <button class="pill" type="button" data-status="red">Red</button>
+              </div>
+              <button id="exportBtn" class="ghost-btn" type="button">
+                <span class="download-icon" aria-hidden="true"></span>
+                Export
+              </button>
+            </div>
+
+            <div class="data-table" role="table" aria-label="Supply board">
+              <div class="table-row table-head" role="row">
+                <span>Item</span>
+                <span>LIN / NSN</span>
+                <span>Holder</span>
+                <span>Status</span>
+                <span>Action</span>
+              </div>
+              <div id="supplyRows"></div>
+            </div>
+          </div>
+
+          <aside class="panel brief-panel">
+            <div class="panel-header compact">
+              <div>
+                <p class="eyebrow">21 May 2026</p>
+                <h3>Supply SGT Brief</h3>
+              </div>
+              <button id="briefToggle" class="icon-btn" type="button" aria-label="Collapse brief">
+                <span class="chevron-icon" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="readiness-gauge" aria-label="Readiness score">
+              <div class="gauge-ring">
+                <span>93</span>
+              </div>
+              <div>
+                <strong>Ready with signature risk</strong>
+                <p>Readiness only counts equipment with an attached signed DA Form 2062. Pending signatures and HR transfer approvals are the primary blockers.</p>
+              </div>
+            </div>
+
+            <div class="brief-tabs" aria-label="Time range">
+              <button class="mini-tab active" type="button" data-range="today">Today</button>
+              <button class="mini-tab" type="button" data-range="week">Week</button>
+              <button class="mini-tab" type="button" data-range="month">Month</button>
+            </div>
+
+            <ul id="taskList" class="task-list" aria-label="Task queue"></ul>
+
+            <div class="contact-card">
+              <div>
+                <span class="avatar">MS</span>
+              </div>
+              <div>
+                <strong>MSG Rivera</strong>
+                <p>Next sync: 1500, RCC-E supply office</p>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section id="inventoryReportingPanel" class="panel reporting-panel is-hidden" aria-label="End user inventory reporting" data-screens="supply phrh inventory">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Inventory Reporting</p>
+              <h3>Inventory Request Compliance</h3>
+            </div>
+            <button id="inventoryLaunchBtn" class="primary-btn" type="button">
+              <span class="plus-icon" aria-hidden="true"></span>
+              Initiate Inventory Report
+            </button>
+          </div>
+
+          <div class="reporting-layout">
+            <div class="compliance-summary">
+              <div class="compliance-meter">
+                <span id="inventoryPercent">42%</span>
+                <small>Reported</small>
+              </div>
+              <div>
+                <strong id="inventoryScopeTitle">Automatic monthly HRH inventory</strong>
+                <p id="inventoryScopeText">Inventory percentage is based on the selected inventory report type. The automatic system request can be changed by Supply SGT/PHRH in settings.</p>
+              </div>
+            </div>
+
+            <div class="inventory-settings">
+              <label>
+                <span>Reporting Type</span>
+                <select id="inventoryTypeSelect">
+                  <option value="auto-monthly">Automatic monthly HRH inventory</option>
+                  <option value="auto-weekly">Automatic weekly HRH inventory</option>
+                  <option value="auto-quarterly">Automatic quarterly HRH inventory</option>
+                  <option value="auto-biannual">Automatic bi-annual HRH inventory</option>
+                  <option value="auto-annual">Automatic annual HRH inventory</option>
+                  <option value="shrh">SHRH requested from End Users</option>
+                  <option value="supply">Supply SGT/PHRH requested from SHRH</option>
+                </select>
+              </label>
+              <div class="setting-note">
+                <strong>Settings control</strong>
+                <p>Supply SGT/PHRH can run one or multiple automatic reporting options at the same time.</p>
+              </div>
+            </div>
+
+            <div class="inventory-reverify-card">
+              <span class="eyebrow">Automatic Inventory Flow</span>
+              <strong>Location first, then new 2062 validation</strong>
+              <ol>
+                <li>End user reverifies room, POD, physical location, section, and assigned SHRH.</li>
+                <li>End user validates each serialized item for a new DA Form 2062.</li>
+                <li>If section changes and the SHRH changes, the system asks whether to turn in, transfer, or split equipment.</li>
+              </ol>
+              <button id="inventoryReverifyBtn" class="secondary-btn" type="button">Preview End User Flow</button>
+            </div>
+
+            <div class="compliance-metrics" aria-label="Inventory reporting metrics">
+              <button class="compliance-card" type="button" data-compliance="reported">
+                <span>Reported</span>
+                <strong>25</strong>
+              </button>
+              <button class="compliance-card warning" type="button" data-compliance="review">
+                <span>Needs Review</span>
+                <strong>4</strong>
+              </button>
+              <button class="compliance-card danger" type="button" data-compliance="missing">
+                <span>Not Reported</span>
+                <strong>9</strong>
+              </button>
+              <button class="compliance-card danger" type="button" data-compliance="late">
+                <span>Past Due</span>
+                <strong>3</strong>
+              </button>
+            </div>
+
+            <div class="nonreporter-list" aria-label="Personnel not yet reported">
+              <div class="mini-list-header">
+                <span>Missing Report</span>
+                <span>Section</span>
+                <span>Due</span>
+              </div>
+              <button class="mini-list-row" type="button" data-person="SPC James Hines" data-section="IMO" data-due="24 May 1700">
+                <strong>SPC James Hines</strong>
+                <span>IMO</span>
+                <span>24 May 1700</span>
+              </button>
+              <button class="mini-list-row past" type="button" data-person="SGT Lina Park" data-section="DCO" data-due="21 May 1200">
+                <strong>SGT Lina Park</strong>
+                <span>DCO</span>
+                <span>21 May 1200</span>
+              </button>
+              <button class="mini-list-row" type="button" data-person="PFC Mateo Diaz" data-section="ISB" data-due="24 May 1700">
+                <strong>PFC Mateo Diaz</strong>
+                <span>ISB</span>
+                <span>24 May 1700</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel document-panel is-hidden" aria-label="Documents depository" data-screens="supply phrh documents">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Documents Depository</p>
+              <h3>Supply SGT Maintained Forms, Letters, Memos, and SOPs</h3>
+            </div>
+            <button class="ghost-btn" type="button" id="updateDocsBtn">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Update Library
+            </button>
+          </div>
+          <div class="document-grid">
+            <button class="document-card" type="button" data-doc="DA Form 2062">
+              <strong>DA Form 2062</strong>
+              <span>Used by military and DOD civilian end users as proof of equipment custody.</span>
+            </button>
+            <button class="document-card" type="button" data-doc="DA Form 3161">
+              <strong>DA Form 3161</strong>
+              <span>Generated for temporary internal transfers between HRHs or SHRHs, with both parties digitally signing.</span>
+            </button>
+            <button class="document-card" type="button" data-doc="Contractor Letter of Understanding">
+              <strong>Contractor Letter of Understanding</strong>
+              <span>Used when contractors are assigned equipment but cannot sign a DA 2062.</span>
+            </button>
+            <button class="document-card" type="button" data-doc="FAR Memo of Understanding">
+              <strong>FAR Memo of Understanding</strong>
+              <span>Statement or memo used for contractors who cannot sign for equipment.</span>
+            </button>
+            <button class="document-card" type="button" data-doc="Hand Receipt Transfer SOP">
+              <strong>HR Transfer SOP</strong>
+              <span>Internal movement rules between PHRH, SHRH, and HRH end users.</span>
+            </button>
+            <button class="document-card" type="button" data-doc="Outprocessing Turn-In Memo">
+              <strong>Outprocessing Memo</strong>
+              <span>Turn-in requirements and accountable handoff instructions.</span>
+            </button>
+            <button class="document-card" type="button" data-doc="Expendable Supply Request Form">
+              <strong>Expendable Supply Form</strong>
+              <span>Used when an office supply is not available in the open expendable supplies listing.</span>
+            </button>
+            <button class="document-card" type="button" data-doc="Building Blueprint and POD Locator">
+              <strong>Building Blueprint</strong>
+              <span>Room and POD schematic with equipment location notes maintained by Supply SGT/PHRH.</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="quick-grid" aria-label="Quick actions" data-screens="supply phrh">
+          <button class="quick-card" type="button" data-action="New HR transfer request" data-template="transfer">
+            <span class="icon transfer-icon" aria-hidden="true"></span>
+            <strong>HR Transfer</strong>
+            <small>Move property between hand receipt holders</small>
+          </button>
+          <button class="quick-card" type="button" data-action="Approve location change request" data-template="location">
+            <span class="icon chart-icon" aria-hidden="true"></span>
+            <strong>Location Approval</strong>
+            <small>Unlock transactions after location review</small>
+          </button>
+          <button class="quick-card" type="button" data-action="New turn-in equipment request" data-template="turnin">
+            <span class="icon paper-icon" aria-hidden="true"></span>
+            <strong>Turn-In Request</strong>
+            <small>Prepare excess or damaged equipment</small>
+          </button>
+          <button class="quick-card" type="button" data-action="New equipment property request" data-template="equipment">
+            <span class="icon box-icon" aria-hidden="true"></span>
+            <strong>Equipment Request</strong>
+            <small>Property book item request</small>
+          </button>
+          <button class="quick-card featured" type="button" data-screen-link="ledger">
+            <span class="icon paper-icon" aria-hidden="true"></span>
+            <strong>Master Ledger Hub</strong>
+            <small>Open LIN dashboard</small>
+          </button>
+          <button class="quick-card" type="button" data-action="Browse excess assets" data-template="excess">
+            <span class="icon box-icon" aria-hidden="true"></span>
+            <strong>Excess Assets</strong>
+            <small>Request serialized open equipment</small>
+          </button>
+          <button class="quick-card" type="button" data-action="New expendable supply request" data-template="expendable">
+            <span class="icon calendar-icon" aria-hidden="true"></span>
+            <strong>Expendable Supplies</strong>
+            <small>Consumables fulfilled by Supply SGT</small>
+          </button>
+          <button class="quick-card" type="button" data-action="Automatic email notifications" data-template="notifications">
+            <span class="icon alert-icon" aria-hidden="true"></span>
+            <strong>Email Notices</strong>
+            <small>View automatic alert triggers</small>
+          </button>
+          <button class="quick-card" type="button" data-action="Report Found on Installation equipment" data-template="foi">
+            <span class="icon alert-icon" aria-hidden="true"></span>
+            <strong>Report FOI</strong>
+            <small>Found on Installation research</small>
+          </button>
+          <button class="quick-card featured" type="button" data-action="Initiate end user inventory reporting" data-template="inventory">
+            <span class="icon chart-icon" aria-hidden="true"></span>
+            <strong>Inventory Reporting</strong>
+            <small>Push report request and track compliance</small>
+          </button>
+        </section>
+      </main>
+    </div>
+
+    <aside id="detailDrawer" class="drawer" aria-hidden="true" aria-label="Details panel">
+      <div class="drawer-header">
+        <div>
+          <p class="eyebrow">Selected Record</p>
+          <h3 id="drawerTitle">Record detail</h3>
+        </div>
+        <button id="drawerClose" class="icon-btn" type="button" aria-label="Close details">
+          <span class="close-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div id="drawerBody" class="drawer-body"></div>
+      <div class="drawer-actions">
+        <button class="secondary-btn" type="button" id="noteBtn">Add Note</button>
+        <button class="primary-btn" type="button" id="routeBtn">Route Action</button>
+      </div>
+    </aside>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js?v=34"></script>
+  </body>
+</html>
