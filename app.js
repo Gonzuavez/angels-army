@@ -870,6 +870,7 @@ const rowsEl = document.querySelector("#supplyRows");
 const masterLedgerRowsEl = document.querySelector("#masterLedgerRows");
 const ledgerTotalCountEl = document.querySelector("#ledgerTotalCount");
 const ledgerSignedCountEl = document.querySelector("#ledgerSignedCount");
+const ledgerUnsignedCountEl = document.querySelector("#ledgerUnsignedCount");
 const ledgerExcessCountEl = document.querySelector("#ledgerExcessCount");
 const ledgerExceptionCountEl = document.querySelector("#ledgerExceptionCount");
 const ledgerSectionFilterEl = document.querySelector("#ledgerSectionFilter");
@@ -1016,11 +1017,13 @@ function renderMasterLedger() {
 function updateLedgerStatusCounts() {
   const allAssets = masterEquipmentGroups.flatMap((group) => group.assets);
   const signedCount = allAssets.filter((asset) => asset.status.toLowerCase().includes("signed")).length;
+  const unsignedCount = allAssets.filter((asset) => !asset.status.toLowerCase().includes("signed")).length;
   const excessCount = allAssets.filter((asset) => asset.status.toLowerCase().includes("excess")).length;
   const exceptionCount = allAssets.filter((asset) => isLedgerException(asset)).length;
 
   if (ledgerTotalCountEl) ledgerTotalCountEl.textContent = allAssets.length;
   if (ledgerSignedCountEl) ledgerSignedCountEl.textContent = signedCount;
+  if (ledgerUnsignedCountEl) ledgerUnsignedCountEl.textContent = unsignedCount;
   if (ledgerExcessCountEl) ledgerExcessCountEl.textContent = excessCount;
   if (ledgerExceptionCountEl) ledgerExceptionCountEl.textContent = exceptionCount;
 
@@ -1060,6 +1063,7 @@ function ledgerAssetMatches(group, asset) {
   const statusMatch =
     ledgerStatusFilter === "all" ||
     (ledgerStatusFilter === "signed" && status.includes("signed")) ||
+    (ledgerStatusFilter === "unsigned" && !status.includes("signed")) ||
     (ledgerStatusFilter === "excess" && status.includes("excess")) ||
     (ledgerStatusFilter === "exception" && isLedgerException(asset));
   const haystack = `${group.section} ${group.shrh} ${group.lin} ${group.nomenclature} ${group.nsn} ${group.part} ${asset.serial} ${asset.endUser} ${asset.location} ${asset.status}`.toLowerCase();

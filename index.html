@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=26" />
+    <link rel="stylesheet" href="styles.css?v=27" />
   </head>
   <body>
     <div class="app-shell">
@@ -205,6 +205,11 @@
                 <span class="metric-label">Signed 2062</span>
                 <strong id="ledgerSignedCount">0</strong>
                 <small>Validated custody records</small>
+              </button>
+              <button class="metric-card ledger-filter-card warning" type="button" data-ledger-status="unsigned">
+                <span class="metric-label">No Signed 2062</span>
+                <strong id="ledgerUnsignedCount">0</strong>
+                <small>Equipment not counted as property on hand</small>
               </button>
               <button class="metric-card ledger-filter-card" type="button" data-ledger-status="excess">
                 <span class="metric-label">Excess / Supply Room</span>
@@ -1122,6 +1127,6 @@ DELL5550-NEW02</textarea>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="app.js?v=36"></script>
+    <script src="app.js?v=37"></script>
   </body>
 </html>
