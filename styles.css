@@ -1238,6 +1238,70 @@ select {
   gap: 6px;
 }
 
+.inventory-request-list {
+  display: grid;
+  gap: 10px;
+  overflow: auto;
+}
+
+.inventory-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(145px, 1fr)) minmax(180px, 0.9fr);
+  gap: 8px;
+  align-items: center;
+  min-width: 1220px;
+}
+
+.inventory-request-card {
+  overflow: hidden;
+  border: 2px solid var(--tile-line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.inventory-request-card summary {
+  min-height: 58px;
+  padding: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.inventory-request-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.inventory-request-card summary span:last-child {
+  color: var(--gold);
+  font-weight: 900;
+}
+
+.inventory-serial-list {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border-top: 2px solid #e0e6e2;
+  background: #f4f7f4;
+}
+
+.inventory-serial-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(140px, 0.6fr) minmax(240px, 1fr) minmax(220px, 0.8fr);
+  gap: 10px;
+  align-items: center;
+  min-width: 980px;
+  padding: 10px;
+  border: 2px solid #c8d4ca;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.inventory-serial-row small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+}
+
 .operation-actions button {
   min-height: 30px;
   padding: 0 9px;
@@ -1350,6 +1414,21 @@ select {
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 850;
+}
+
+.status-chip.pending {
+  color: #86530a;
+  background: #f7e9c9;
+}
+
+.status-chip.warning {
+  color: #8c2525;
+  background: #f4d5d5;
+}
+
+.status-chip.complete {
+  color: #1f5d3a;
+  background: #dff1e6;
 }
 
 .green {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=32" />
+    <link rel="stylesheet" href="styles.css?v=33" />
   </head>
   <body>
     <div class="app-shell">
@@ -151,6 +151,11 @@
             <span class="metric-label">Inventory</span>
             <strong>42%</strong>
             <small id="inventoryMetricLabel">Auto monthly HRH report</small>
+          </button>
+          <button class="metric-card warning" type="button" data-screen-link="inventory-discrepancies" data-inventory-scope-link="full">
+            <span class="metric-label">Inventory Discrepancies</span>
+            <strong>4</strong>
+            <small>Submitted during inventories</small>
           </button>
           <button class="metric-card" type="button" data-screen-link="property-status">
             <span class="metric-label">Property Book Status</span>
@@ -435,6 +440,11 @@ DELL5550-NEW02</textarea>
               <span class="metric-label">Inventory Requested</span>
               <strong>2</strong>
               <small>Assigned to this SHRH</small>
+            </button>
+            <button class="metric-card warning" type="button" data-screen-link="inventory-discrepancies" data-inventory-scope-link="shrh">
+              <span class="metric-label">Inventory Discrepancies</span>
+              <strong>2</strong>
+              <small>My section only</small>
             </button>
             <button class="metric-card" type="button" data-screen-link="workorders">
               <span class="metric-label">End User Signatures</span>
@@ -1005,17 +1015,41 @@ DELL5550-NEW02</textarea>
             <strong id="inventoryHubScopeLabel">Full visibility</strong>
             <p id="inventoryHubScopeNote">Supply SGT and PHRH can see every active inventory request and initiate random or on-the-spot inventories to selected SHRH users or all SHRH users.</p>
           </div>
-          <div class="operation-table inventory-operation-table" role="table" aria-label="Active inventory list">
-            <div class="operation-row operation-head" role="row">
+          <div class="inventory-request-list" aria-label="Active inventory list">
+            <div class="operation-row operation-head inventory-summary-grid" role="row">
               <span>Inventory Type</span>
               <span>Triggered By</span>
               <span>Assigned To</span>
               <span>Scope</span>
               <span>Suspense</span>
               <span>Completion</span>
-              <span>Action</span>
+              <span>Serial Actions</span>
             </div>
             <div id="inventoryHubRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="Inventory discrepancies" data-screens="inventory-discrepancies">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Inventory Discrepancies</p>
+              <h3>Discrepancies Submitted During Inventory</h3>
+            </div>
+            <button class="ghost-btn workflow-action" type="button" data-screen-link="inventory-hub">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Open Inventory Hub
+            </button>
+          </div>
+          <div class="operation-table" role="table" aria-label="Inventory discrepancy list">
+            <div class="operation-row operation-head" role="row">
+              <span>LIN / Serial</span>
+              <span>Inventory</span>
+              <span>Reported By</span>
+              <span>Section</span>
+              <span>Discrepancy Note</span>
+              <span>Action</span>
+            </div>
+            <div id="inventoryDiscrepancyRows"></div>
           </div>
         </section>
 
@@ -1423,6 +1457,6 @@ DELL5550-NEW02</textarea>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="app.js?v=42"></script>
+    <script src="app.js?v=43"></script>
   </body>
 </html>

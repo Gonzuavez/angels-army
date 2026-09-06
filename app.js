@@ -802,6 +802,7 @@ const pendingSignatureItems = [
 
 const inventoryRequests = [
   {
+    id: "inv-hrh-monthly",
     type: "Monthly Automatic HRH Inventory",
     requestedBy: "System",
     assignedTo: "SPC James Hines",
@@ -809,8 +810,15 @@ const inventoryRequests = [
     suspense: "31 May 2026",
     completion: "Not started",
     audience: "hrh",
+    section: "ISB",
+    items: [
+      { lin: "LPT-5550", nomenclature: "Dell Latitude 5550 Laptop", serial: "DELL5550-91A23", status: "Pending validation", discrepancy: "" },
+      { lin: "MON-24", nomenclature: "Dell 24-inch Monitor", serial: "DELL24-77Q12", status: "Pending validation", discrepancy: "Serial label is worn; user needs SHRH verification." },
+      { lin: "MON-24", nomenclature: "Dell 24-inch Monitor", serial: "DELL24-77Q13", status: "Pending validation", discrepancy: "" },
+    ],
   },
   {
+    id: "inv-hrh-spot",
     type: "On-the-Spot SHRH Inventory",
     requestedBy: "SSG Cruz",
     assignedTo: "SPC James Hines",
@@ -818,8 +826,14 @@ const inventoryRequests = [
     suspense: "24 May 2026",
     completion: "Location reverification pending",
     audience: "hrh",
+    section: "ISB",
+    items: [
+      { lin: "LPT-5550", nomenclature: "Dell Latitude 5550 Laptop", serial: "DELL5550-91A23", status: "Location reverification pending", discrepancy: "" },
+      { lin: "MON-24", nomenclature: "Dell 24-inch Monitor", serial: "DELL24-77Q12", status: "Discrepancy submitted", discrepancy: "Monitor was left at losing POD during section move; needs approval before new 2062." },
+    ],
   },
   {
+    id: "inv-shrh-random",
     type: "Random SHRH Inventory",
     requestedBy: "Supply SGT",
     assignedTo: "SSG Cruz",
@@ -827,8 +841,15 @@ const inventoryRequests = [
     suspense: "29 May 2026",
     completion: "68%",
     audience: "shrh",
+    section: "ISB",
+    items: [
+      { lin: "ENC-KG175D", nomenclature: "TACLANE Micro Encryption Device", serial: "KG175D-SHRH07", status: "Discrepancy submitted", discrepancy: "End user reported item missing from expected crypto room location." },
+      { lin: "SRV-R760", nomenclature: "Dell PowerEdge R760 Server", serial: "R760-ISB-044", status: "Complete", discrepancy: "" },
+      { lin: "DSK-Z2", nomenclature: "HP Z2 Desktop", serial: "HPZ2-ISB-018", status: "Pending validation", discrepancy: "" },
+    ],
   },
   {
+    id: "inv-phrh-dco",
     type: "PHRH Directed Inventory",
     requestedBy: "PHRH / SFC Mills",
     assignedTo: "CW2 Novak",
@@ -836,8 +857,14 @@ const inventoryRequests = [
     suspense: "27 May 2026",
     completion: "31%",
     audience: "shrh",
+    section: "DCO",
+    items: [
+      { lin: "SRV-R760", nomenclature: "Dell PowerEdge R760 Server", serial: "R760-SRV-118", status: "Discrepancy submitted", discrepancy: "Asset is powered down in alternate rack; location note needs update." },
+      { lin: "ENC-KG175D", nomenclature: "TACLANE Micro Encryption Device", serial: "KG175D-DCO-014", status: "Pending validation", discrepancy: "" },
+    ],
   },
   {
+    id: "inv-all-shrh",
     type: "Supply SGT Directed SHRH Inventory",
     requestedBy: "Supply SGT",
     assignedTo: "All SHRH users",
@@ -845,6 +872,12 @@ const inventoryRequests = [
     suspense: "29 May 2026",
     completion: "76%",
     audience: "full",
+    section: "All sections",
+    items: [
+      { lin: "LPT-840G10", nomenclature: "HP EliteBook 840 G10 Laptop", serial: "HP840G10-23A91", status: "Pending SHRH validation", discrepancy: "" },
+      { lin: "MON-27", nomenclature: "Dell 27-inch Monitor", serial: "MON27-3381", status: "Pending SHRH validation", discrepancy: "" },
+      { lin: "DSK-Z2", nomenclature: "HP Z2 Desktop", serial: "HPZ2-PHRH04", status: "Discrepancy submitted", discrepancy: "Model listed as G8 but user verified G9 during inventory." },
+    ],
   },
 ];
 
@@ -890,6 +923,10 @@ const operationPages = {
       ["PHRH Directed Inventory", "SFC Mills", "ISB, IMO, DCO", "27 May 2026", "31%", "Open inventory"],
       ["Supply SGT Directed SHRH Inventory", "Supply SGT", "All SHRH sections", "29 May 2026", "76%", "Open inventory"],
     ],
+  },
+  "inventory-discrepancies": {
+    container: "inventoryDiscrepancyRows",
+    rows: [],
   },
   "property-status": {
     container: "propertyStatusRows",
@@ -1130,6 +1167,7 @@ function showScreen(screen = "supply") {
         "location-approvals": "Location Approvals",
         "missing-page": "Missing Equipment",
         "inventory-hub": "Inventory Actions",
+        "inventory-discrepancies": "Inventory Discrepancies",
         "property-status": "Property Book Status Reports",
         "equipment-requests-page": "Equipment Requests",
         "hr-actions-page": "HR Actions",
@@ -1292,9 +1330,13 @@ function renderOperationPage(screen) {
   if (!container) return;
   container.innerHTML = "";
 
-  const rows = screen === "inventory-hub" ? visibleInventoryRows() : page.rows;
+  if (screen === "inventory-hub") {
+    updateInventoryHubScopeText();
+    renderInventoryRequestRows(container);
+    return;
+  }
 
-  if (screen === "inventory-hub") updateInventoryHubScopeText();
+  const rows = screen === "inventory-discrepancies" ? visibleInventoryDiscrepancyRows() : page.rows;
 
   rows.forEach((cells) => {
     const row = document.createElement("div");
@@ -1321,6 +1363,132 @@ function visibleInventoryRows() {
       return true;
     })
     .map((request) => [request.type, request.requestedBy, request.assignedTo, request.scope, request.suspense, request.completion, "Open inventory"]);
+}
+
+function visibleInventoryRequests() {
+  return inventoryRequests.filter((request) => {
+    if (inventoryScope === "hrh") return request.audience === "hrh" && request.assignedTo === "SPC James Hines";
+    if (inventoryScope === "shrh") return request.audience === "shrh" && request.assignedTo === "SSG Cruz";
+    return true;
+  });
+}
+
+function visibleInventoryDiscrepancyRows() {
+  const requests =
+    inventoryScope === "shrh"
+      ? inventoryRequests.filter((request) => request.section === "ISB")
+      : visibleInventoryRequests();
+
+  return requests.flatMap((request) =>
+    request.items
+      .filter((item) => item.discrepancy)
+      .map((item) => [
+        `${item.lin} / ${item.serial}`,
+        request.type,
+        request.assignedTo,
+        sectionForInventoryRequest(request),
+        item.discrepancy,
+        "Open discrepancy",
+      ]),
+  );
+}
+
+function sectionForInventoryRequest(request) {
+  if (request.section) return request.section;
+  if (request.scope.includes("ISB")) return "ISB";
+  if (request.scope.includes("DCO")) return "DCO";
+  if (request.scope.includes("All sections")) return "All sections";
+  return "RCC-E";
+}
+
+function renderInventoryRequestRows(container) {
+  const requests = visibleInventoryRequests();
+  requests.forEach((request, index) => {
+    const details = document.createElement("details");
+    details.className = "inventory-request-card";
+    if (index === 0) details.open = true;
+    details.innerHTML = `
+      <summary class="inventory-summary-grid">
+        <span>${request.type}</span>
+        <span>${request.requestedBy}</span>
+        <span>${request.assignedTo}</span>
+        <span>${request.scope}</span>
+        <span>${request.suspense}</span>
+        <span>${request.completion}</span>
+        <span>Click to view serials</span>
+      </summary>
+      <div class="inventory-serial-list">
+        ${request.items
+          .map(
+            (item, itemIndex) => `
+              <div class="inventory-serial-row">
+                <span><strong>${item.serial}</strong><small>${item.lin} - ${item.nomenclature}</small></span>
+                <span class="status-chip ${item.discrepancy ? "warning" : item.status === "Complete" ? "complete" : "pending"}">${item.status}</span>
+                <span>${item.discrepancy || "No discrepancy reported"}</span>
+                <span class="operation-actions">
+                  <button type="button" data-inventory-complete="${request.id}" data-inventory-item="${itemIndex}">Complete</button>
+                  <button type="button" data-inventory-discrepancy="${request.id}" data-inventory-item="${itemIndex}">Discrepancy Found</button>
+                </span>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    `;
+    details.querySelectorAll("[data-inventory-complete]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        const item = inventoryItemForButton(button);
+        showToast(`${item.serial} marked complete for this prototype`);
+      });
+    });
+    details.querySelectorAll("[data-inventory-discrepancy]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        openInventoryDiscrepancyForm(button);
+      });
+    });
+    container.appendChild(details);
+  });
+
+  if (!requests.length) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "ledger-empty-state";
+    emptyState.textContent = "No inventory requests apply to this dashboard.";
+    container.appendChild(emptyState);
+  }
+}
+
+function inventoryItemForButton(button) {
+  const request = inventoryRequests.find((item) => item.id === button.dataset.inventoryComplete || item.id === button.dataset.inventoryDiscrepancy);
+  const item = request.items[Number(button.dataset.inventoryItem)];
+  return { request, ...item };
+}
+
+function openInventoryDiscrepancyForm(button) {
+  const item = inventoryItemForButton(button);
+  drawerTitle.textContent = `Inventory Discrepancy: ${item.serial}`;
+  drawerBody.innerHTML = `
+    <div class="detail-line"><span>Inventory</span><p>${item.request.type}</p></div>
+    <div class="detail-line"><span>Requested by</span><p>${item.request.requestedBy}</p></div>
+    <div class="detail-line"><span>Assigned to</span><strong>${item.request.assignedTo}</strong></div>
+    <div class="detail-line"><span>LIN / Item</span><p>${item.lin} - ${item.nomenclature}</p></div>
+    <div class="detail-line"><span>Serial number</span><strong>${item.serial}</strong></div>
+    <form class="status-question-form" aria-label="Inventory discrepancy note">
+      <label>
+        <span>Discrepancy note required</span>
+        <textarea>${item.discrepancy || "Describe exactly what is wrong, missing, mismatched, damaged, or different from the 2062/master ledger."}</textarea>
+      </label>
+    </form>
+    <div class="detail-line"><span>Routing</span><p>Submitting this discrepancy automatically sends it to the next higher level: HRH to SHRH, SHRH to Supply SGT/PHRH, and Supply SGT to PHRH when approval is required.</p></div>
+    <button class="primary-btn drawer-submit-btn" type="button">Submit Discrepancy</button>
+  `;
+  drawer.querySelector(".drawer-submit-btn")?.addEventListener("click", () => {
+    showToast(`Discrepancy for ${item.serial} routed to higher level`);
+    closeDrawer();
+  });
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
 }
 
 function updateInventoryHubScopeText() {
@@ -1368,6 +1536,7 @@ function openOperationAction(screen, cells, action) {
     "location-approvals": action === "approve" ? "Approve Location Change" : "Reject Location Change",
     "missing-page": "Missing Equipment Report",
     "inventory-hub": "Active Inventory Detail",
+    "inventory-discrepancies": "Inventory Discrepancy Detail",
     "property-status": "Property Book Status Report",
     "equipment-requests-page": action === "select-excess" ? "Select Equipment From Excess" : "Issue Equipment",
     "hr-actions-page": "HR Action Detail",
@@ -1420,6 +1589,15 @@ function openOperationAction(screen, cells, action) {
       <div class="detail-line"><span>Default rule</span><p>Inventory requests default to a one-month suspense unless the initiating SHRH, Supply SGT, or PHRH sets a different due date within their permission scope.</p></div>
       <div class="detail-line"><span>End user dashboard ticker</span><p>Every end user with signed equipment sees an inventory request notification with suspense date until they reverify location and validate equipment.</p></div>
       <div class="detail-line"><span>SHRH / PHRH visibility</span><p>SHRH sees their section only. Supply SGT and PHRH see all active inventories and can target selected sections.</p></div>
+    `;
+  } else if (screen === "inventory-discrepancies") {
+    drawerBody.innerHTML = `
+      <div class="detail-line"><span>LIN / Serial</span><strong>${cells[0]}</strong></div>
+      <div class="detail-line"><span>Inventory</span><p>${cells[1]}</p></div>
+      <div class="detail-line"><span>Reported by</span><p>${cells[2]}</p></div>
+      <div class="detail-line"><span>Section</span><p>${cells[3]}</p></div>
+      <div class="detail-line"><span>Discrepancy</span><p>${cells[4]}</p></div>
+      <div class="detail-line"><span>Visibility</span><p>Supply SGT and PHRH see all inventory discrepancies. SHRH sees discrepancies for inventories under their section only.</p></div>
     `;
   } else if (screen === "property-status") {
     drawerBody.innerHTML = `
@@ -2220,7 +2398,7 @@ document.querySelectorAll(".metric-card").forEach((button) => {
       if (button.dataset.screenLink === "workorders") {
         pendingSignatureScope = activeScreen;
       }
-      if (button.dataset.screenLink === "inventory-hub") {
+      if (button.dataset.screenLink === "inventory-hub" || button.dataset.screenLink === "inventory-discrepancies") {
         inventoryScope = button.dataset.inventoryScopeLink || (activeScreen === "hrh" ? "hrh" : activeScreen === "shrh" ? "shrh" : "full");
       }
       if (button.dataset.ledgerStatusLink) {
@@ -2296,7 +2474,7 @@ document.querySelectorAll(".quick-card, .workflow-action").forEach((button) => {
       if (button.dataset.screenLink === "workorders") {
         pendingSignatureScope = activeScreen;
       }
-      if (button.dataset.screenLink === "inventory-hub") {
+      if (button.dataset.screenLink === "inventory-hub" || button.dataset.screenLink === "inventory-discrepancies") {
         inventoryScope = button.dataset.inventoryScopeLink || (activeScreen === "hrh" ? "hrh" : activeScreen === "shrh" ? "shrh" : "full");
       }
       if (button.dataset.ledgerStatusLink) {
