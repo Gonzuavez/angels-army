@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=27" />
+    <link rel="stylesheet" href="styles.css?v=28" />
   </head>
   <body>
     <div class="app-shell">
@@ -122,7 +122,7 @@
             <strong>5</strong>
             <small>LIN groups by section and SHRH</small>
           </button>
-          <button class="metric-card" type="button" data-filter="pending" data-jump-tab="pending">
+          <button class="metric-card" type="button" data-screen-link="workorders">
             <span class="metric-label">Pending Signatures</span>
             <strong>18</strong>
             <small>Second signature or approval</small>
@@ -408,7 +408,7 @@ DELL5550-NEW02</textarea>
               <strong>93%</strong>
               <small>Equipment with signed 2062</small>
             </button>
-            <button class="metric-card" type="button" data-filter="pending" data-jump-tab="pending">
+            <button class="metric-card" type="button" data-screen-link="workorders">
               <span class="metric-label">End User Signatures</span>
               <strong>5</strong>
               <small>Waiting on HRH action</small>
@@ -472,6 +472,7 @@ DELL5550-NEW02</textarea>
             <button class="quick-card" type="button" data-action="New HR transfer request" data-template="transfer"><strong>HR Transfer</strong><small>Move equipment to another SHRH or HRH</small></button>
             <button class="quick-card" type="button" data-action="New turn-in equipment request" data-template="turnin"><strong>Turn-In</strong><small>Send equipment to Supply SGT</small></button>
             <button class="quick-card" type="button" data-action="New equipment property request" data-template="equipment"><strong>Equipment Request</strong><small>Request property book items</small></button>
+            <button class="quick-card" type="button" data-action="New expendable supply request" data-template="expendable"><strong>Supplies</strong><small>Request office expendables</small></button>
             <button class="quick-card" type="button" data-action="Request AAR data correction" data-template="aar"><strong>AAR Change</strong><small>Correct serial or nomenclature</small></button>
             <button class="quick-card" type="button" data-action="Report Found on Installation equipment" data-template="foi"><strong>Report FOI</strong><small>Unidentified found equipment</small></button>
           </div>
@@ -541,7 +542,7 @@ DELL5550-NEW02</textarea>
               <strong>3</strong>
               <small>Laptop and two monitors</small>
             </button>
-            <button class="metric-card" type="button" data-filter="pending" data-jump-tab="pending">
+            <button class="metric-card" type="button" data-screen-link="workorders">
               <span class="metric-label">Pending Signature</span>
               <strong>1</strong>
               <small>Needs my action</small>
@@ -584,6 +585,7 @@ DELL5550-NEW02</textarea>
             <button class="quick-card" type="button" data-action="Request equipment while inprocessing" data-template="equipment"><strong>Request Equipment</strong><small>Ask SHRH for property book items</small></button>
             <button class="quick-card" type="button" data-action="Request turn-in while outprocessing" data-template="turnin"><strong>Turn-In</strong><small>Return equipment to SHRH</small></button>
             <button class="quick-card" type="button" data-action="Start HRH transfer handshake" data-template="transfer"><strong>Transfer</strong><small>Generate DA Form 3161</small></button>
+            <button class="quick-card" type="button" data-action="Request location change" data-template="location-request"><strong>Location Change</strong><small>Route to SHRH approval</small></button>
             <button class="quick-card" type="button" data-action="New expendable supply request" data-template="expendable"><strong>Supplies</strong><small>Request expendables</small></button>
             <button class="quick-card" type="button" data-action="Request AAR data correction" data-template="aar"><strong>AAR Change</strong><small>Correct serial or nomenclature</small></button>
             <button class="quick-card" type="button" data-action="Report Found on Installation equipment" data-template="foi"><strong>Report FOI</strong><small>Unidentified found equipment</small></button>
@@ -821,7 +823,36 @@ DELL5550-NEW02</textarea>
           </div>
         </section>
 
-        <section class="operations-grid" data-screens="excess receipts missing workorders reports">
+        <section class="panel pending-signatures-panel" aria-label="Pending signatures page" data-screens="workorders">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Pending Signatures</p>
+              <h3>Serialized Equipment Waiting Signature or Approval</h3>
+            </div>
+            <button class="ghost-btn" type="button" data-action="Automatic email notifications" data-template="notifications">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Send Reminder Batch
+            </button>
+          </div>
+          <div class="master-ledger-note">
+            <strong>Signature queue</strong>
+            <p>This page shows the line-item equipment actually waiting on signature or approval for equipment requests, turn-ins, HR transfers, location approvals, contractor memorandums, and AAR corrections.</p>
+          </div>
+          <div class="pending-signature-table" role="table" aria-label="Pending signature equipment list">
+            <div class="pending-signature-row pending-signature-head" role="row">
+              <span>Transaction</span>
+              <span>LIN / NSN</span>
+              <span>Serial / Item</span>
+              <span>First Signature</span>
+              <span>Waiting On</span>
+              <span>Route</span>
+              <span>Action</span>
+            </div>
+            <div id="pendingSignatureRows"></div>
+          </div>
+        </section>
+
+        <section class="operations-grid" data-screens="excess receipts missing reports">
           <div class="panel main-panel">
             <div class="panel-header">
               <div>
@@ -1127,6 +1158,6 @@ DELL5550-NEW02</textarea>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="app.js?v=37"></script>
+    <script src="app.js?v=38"></script>
   </body>
 </html>

@@ -737,6 +737,57 @@ const personalCustodyGroups = {
   ],
 };
 
+const pendingSignatureItems = [
+  {
+    transaction: "Equipment Request",
+    lin: "LPT-5550 / 7021-01-RCCE-001",
+    serial: "DELL5550-NEW02",
+    firstSignature: "SPC James Hines",
+    waitingOn: "SSG Cruz",
+    route: "HRH request -> SHRH approval -> 2062 signature",
+  },
+  {
+    transaction: "Turn-In",
+    lin: "MON-24 / 7025-01-RCCE-005",
+    serial: "DELL24-77Q12",
+    firstSignature: "SPC James Hines",
+    waitingOn: "SSG Cruz",
+    route: "End User turn-in -> SHRH acceptance",
+  },
+  {
+    transaction: "HR Transfer",
+    lin: "LPT-5550 / 7021-01-RCCE-001",
+    serial: "DELL5550-91A23",
+    firstSignature: "Losing HRH signed",
+    waitingOn: "Receiving SHRH",
+    route: "HRH handshake -> DA Form 3161 -> receiving SHRH approval",
+  },
+  {
+    transaction: "Contractor Memo",
+    lin: "MON-27 / 7025-01-RCCE-005",
+    serial: "MON27-3381",
+    firstSignature: "Contractor acknowledged",
+    waitingOn: "Government approver",
+    route: "Contractor memo -> SHRH/Supply SGT approval",
+  },
+  {
+    transaction: "AAR Change",
+    lin: "DSK-Z2 / 7025-01-RCCE-004",
+    serial: "HPZ2-PHRH04",
+    firstSignature: "SFC Mills",
+    waitingOn: "Supply SGT / PHRH",
+    route: "AAR correction -> master ledger approval",
+  },
+  {
+    transaction: "Location Approval",
+    lin: "LPT-5550 / 7021-01-RCCE-001",
+    serial: "DELL5550-91A23",
+    firstSignature: "HRH location update",
+    waitingOn: "SSG Cruz",
+    route: "Room/POD change -> SHRH approval before transaction",
+  },
+];
+
 const rolePermissions = {
   supply: {
     title: "Supply SGT / PHRH Visibility",
@@ -868,6 +919,7 @@ let ledgerSearchTerm = "";
 
 const rowsEl = document.querySelector("#supplyRows");
 const masterLedgerRowsEl = document.querySelector("#masterLedgerRows");
+const pendingSignatureRowsEl = document.querySelector("#pendingSignatureRows");
 const ledgerTotalCountEl = document.querySelector("#ledgerTotalCount");
 const ledgerSignedCountEl = document.querySelector("#ledgerSignedCount");
 const ledgerUnsignedCountEl = document.querySelector("#ledgerUnsignedCount");
@@ -905,6 +957,9 @@ function showScreen(screen = "supply") {
 
   if (rolePermissions[screen]) {
     renderPermissions(screen);
+  }
+  if (screen === "workorders") {
+    renderPendingSignatureRows();
   }
 
   if (topEyebrowEl) {
@@ -1012,6 +1067,168 @@ function renderMasterLedger() {
     emptyState.textContent = "No equipment matches the selected ledger filters.";
     masterLedgerRowsEl.appendChild(emptyState);
   }
+}
+
+function renderPendingSignatureRows() {
+  if (!pendingSignatureRowsEl) return;
+  pendingSignatureRowsEl.innerHTML = "";
+
+  pendingSignatureItems.forEach((item) => {
+    const row = document.createElement("button");
+    row.className = "pending-signature-row";
+    row.type = "button";
+    row.innerHTML = `
+      <span>${item.transaction}</span>
+      <span>${item.lin}</span>
+      <span>${item.serial}</span>
+      <span>${item.firstSignature}</span>
+      <span>${item.waitingOn}</span>
+      <span>${item.route}</span>
+      <span>Open</span>
+    `;
+    row.addEventListener("click", () => openPendingSignature(item));
+    pendingSignatureRowsEl.appendChild(row);
+  });
+}
+
+function openPendingSignature(item) {
+  drawerTitle.textContent = `${item.transaction}: ${item.serial}`;
+  drawerBody.innerHTML = `
+    <div class="detail-line"><span>LIN / NSN</span><strong>${item.lin}</strong></div>
+    <div class="detail-line"><span>Serial / item</span><strong>${item.serial}</strong></div>
+    <div class="detail-line"><span>First signature</span><p>${item.firstSignature}</p></div>
+    <div class="detail-line"><span>Waiting on</span><strong>${item.waitingOn}</strong></div>
+    <div class="detail-line"><span>Route</span><p>${item.route}</p></div>
+    <div class="detail-line"><span>Email reminder</span><p>The system can notify the user whose signature or approval is needed and keep the reminder in the equipment file cabinet.</p></div>
+  `;
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
+}
+
+function openRequestForm(title, requestType) {
+  const isEquipment = requestType === "equipment";
+  drawerTitle.textContent = isEquipment ? "Property Book Equipment Request Form" : "Office / Expendable Supply Request Form";
+  drawerBody.innerHTML = `
+    <div class="detail-line"><span>Request type</span><strong>${isEquipment ? "Property book equipment" : "Expendable office supplies"}</strong></div>
+    <form class="status-question-form request-form" aria-label="${title}">
+      <fieldset>
+        <legend>Requestor Information</legend>
+        <label>
+          <span>Name</span>
+          <input type="text" value="SPC James Hines" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" value="spc.hines@example.mil" />
+        </label>
+        <label>
+          <span>Contact number</span>
+          <input type="text" value="DSN 555-0142" />
+        </label>
+        <label>
+          <span>Section</span>
+          <select>
+            <option>ISB</option>
+            <option>NMB</option>
+            <option>TCO</option>
+            <option>OPS</option>
+            <option>Arms Room</option>
+            <option>IMO</option>
+            <option>SMB</option>
+            <option>DCO</option>
+          </select>
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>${isEquipment ? "Requested Equipment" : "Requested Supplies"}</legend>
+        <label>
+          <span>Nomenclature</span>
+          <input type="text" value="${isEquipment ? "Dell Latitude 5550 Laptop" : "Printer paper, pens, toner, folders" }" />
+        </label>
+        <label>
+          <span>How many</span>
+          <input type="number" min="1" value="${isEquipment ? "1" : "4"}" />
+        </label>
+        <label>
+          <span>${isEquipment ? "LIN / NSN / model, if known" : "Item details, if not listed"}</span>
+          <input type="text" value="${isEquipment ? "LPT-5550 / 7021-01-RCCE-001 / Dell Latitude 5550" : "Specific size, color, printer model, or preferred substitute"}" />
+        </label>
+        <label>
+          <span>Needed by</span>
+          <input type="date" value="2026-05-28" />
+        </label>
+      </fieldset>
+      <label>
+        <span>Reason / notes</span>
+        <textarea>${isEquipment ? "Explain why the property book item is needed, who will use it, where it will be located, and whether this supports inprocessing, replacement, or reassignment." : "Describe the office supply need, quantities, delivery location, preferred substitute if unavailable, and any specifics the Supply SGT needs to fulfill the request."}</textarea>
+      </label>
+    </form>
+    <div class="detail-line"><span>Routing</span><p>${isEquipment ? "End User requests route to their SHRH first. SHRH requests route to Supply SGT/PHRH. If approved, the system generates the required custody document." : "Expendable supply requests route to Supply SGT/PHRH for fulfillment to the customer and do not generate a DA Form 2062."}</p></div>
+  `;
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
+}
+
+function openLocationChangeRequest() {
+  drawerTitle.textContent = "End User Location Change Request";
+  drawerBody.innerHTML = `
+    <div class="detail-line"><span>Approval required</span><p>This request stays pending until the assigned SHRH approves the room, POD, or section change.</p></div>
+    <form class="status-question-form request-form" aria-label="End user location change request">
+      <fieldset>
+        <legend>Requestor Information</legend>
+        <label>
+          <span>Name</span>
+          <input type="text" value="SPC James Hines" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" value="spc.hines@example.mil" />
+        </label>
+        <label>
+          <span>Contact number</span>
+          <input type="text" value="DSN 555-0142" />
+        </label>
+        <label>
+          <span>Current section / SHRH</span>
+          <input type="text" value="ISB / SSG Cruz" />
+        </label>
+      </fieldset>
+      <fieldset>
+        <legend>Location Change</legend>
+        <label>
+          <span>Current room / POD</span>
+          <input type="text" value="B-214 / POD-07" />
+        </label>
+        <label>
+          <span>New room / POD</span>
+          <input type="text" value="B-219 / POD-08" />
+        </label>
+        <label>
+          <span>New section, if changed</span>
+          <select>
+            <option>ISB</option>
+            <option>IMO</option>
+            <option>NMB</option>
+            <option>TCO</option>
+            <option>OPS</option>
+            <option>SMB</option>
+            <option>DCO</option>
+          </select>
+        </label>
+        <label>
+          <span>Equipment affected</span>
+          <textarea>Dell Latitude 5550 laptop serial DELL5550-91A23. Monitors DELL24-77Q12 and DELL24-77Q13 remain at current POD unless SHRH approves transfer.</textarea>
+        </label>
+      </fieldset>
+      <label>
+        <span>Reason / notes</span>
+        <textarea>Explain why the location changed and exactly where the equipment will be kept after approval.</textarea>
+      </label>
+    </form>
+    <div class="detail-line"><span>Pending signature page</span><p>This location change appears in Pending Signatures until SHRH approval is recorded.</p></div>
+  `;
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
 }
 
 function updateLedgerStatusCounts() {
@@ -1704,9 +1921,9 @@ document.querySelectorAll(".quick-card, .workflow-action").forEach((button) => {
       showToast(`${button.textContent.trim()} opened`);
       return;
     }
-    if (button.dataset.template === "excess" || button.dataset.template === "expendable") {
-      const targetTab = button.dataset.template === "excess" ? "excess" : "expendable";
-      const targetMetric = button.dataset.template === "excess" ? "excess" : "supplies";
+    if (button.dataset.template === "excess") {
+      const targetTab = "excess";
+      const targetMetric = "excess";
       activeTab = targetTab;
       activeMetric = targetMetric;
       document.querySelectorAll(".segment").forEach((item) => {
@@ -1716,9 +1933,9 @@ document.querySelectorAll(".quick-card, .workflow-action").forEach((button) => {
         item.classList.toggle("active", item.dataset.filter === activeMetric);
       });
       renderRows();
-      showScreen(button.dataset.template === "excess" ? "excess" : activeScreen === "phrh" ? "phrh" : "supply");
+      showScreen("excess");
       document.querySelector(".main-panel").scrollIntoView({ behavior: "smooth", block: "start" });
-      showToast(button.dataset.template === "excess" ? "Showing excess assets available from the supply room" : "Showing open expendable supplies");
+      showToast("Showing excess assets available from the supply room");
       return;
     }
     openWorkflow(button.dataset.action, button.dataset.template);
@@ -1727,6 +1944,21 @@ document.querySelectorAll(".quick-card, .workflow-action").forEach((button) => {
 
 function openWorkflow(title, template) {
   const selectedShrhSection = document.querySelector("#shrhScreenSection")?.value || "selected section";
+  if (template === "equipment") {
+    openRequestForm(title, "equipment");
+    return;
+  }
+
+  if (template === "expendable") {
+    openRequestForm(title, "expendable");
+    return;
+  }
+
+  if (template === "location-request") {
+    openLocationChangeRequest();
+    return;
+  }
+
   if (template === "notifications") {
     drawerTitle.textContent = title;
     drawerBody.innerHTML = `
@@ -2100,6 +2332,7 @@ document.addEventListener("keydown", (event) => {
 
 renderRows();
 renderMasterLedger();
+renderPendingSignatureRows();
 renderPersonalLedgers();
 renderTasks();
 renderPermissions();

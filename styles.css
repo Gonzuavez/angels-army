@@ -1141,6 +1141,72 @@ select {
   font-weight: 850;
 }
 
+.pending-signatures-panel {
+  scroll-margin-top: 18px;
+}
+
+.pending-signature-table {
+  overflow: auto;
+  border: 2px solid var(--tile-line);
+  border-radius: 8px;
+}
+
+.pending-signature-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(260px, 1.4fr) 80px;
+  gap: 8px;
+  align-items: center;
+  min-width: 1240px;
+  width: 100%;
+  min-height: 54px;
+  padding: 10px;
+  color: var(--ink);
+  background: #ffffff;
+  border: 0;
+  border-bottom: 2px solid #e0e6e2;
+  text-align: left;
+}
+
+.pending-signature-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color: var(--muted);
+  background: #edf3ef;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.pending-signature-row:not(.pending-signature-head):hover {
+  background: #f8faf8;
+  box-shadow: inset 4px 0 0 var(--amber);
+}
+
+.request-form fieldset {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.request-form legend {
+  padding: 0 6px;
+  color: #314136;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.request-form fieldset label:has(textarea),
+.request-form > label {
+  grid-column: 1 / -1;
+}
+
 .table-row {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(0, 1.05fr) minmax(0, 0.85fr) 66px 72px;
@@ -1625,6 +1691,7 @@ select {
 }
 
 .status-question-form input,
+.status-question-form select,
 .status-question-form textarea {
   width: 100%;
   min-height: 38px;
@@ -1947,6 +2014,7 @@ select {
   .permission-grid,
   .profile-layout,
   .profile-form,
+  .request-form fieldset,
   .ledger-filter-bar {
     grid-template-columns: 1fr;
   }
