@@ -788,6 +788,76 @@ const pendingSignatureItems = [
   },
 ];
 
+const operationPages = {
+  "email-notices": {
+    container: "emailNoticeRows",
+    rows: [
+      ["Pending Inventory", "SPC James Hines", "LPT-5550 / assigned custody", "Sent", "21 May 0900", "Open history"],
+      ["Signature Required", "SSG Cruz", "MON-24 / DELL24-77Q12", "Delivered", "21 May 1015", "Open history"],
+      ["AAR Approval", "Supply SGT / PHRH", "DSK-Z2 / HPZ2-PHRH04", "Awaiting review", "21 May 1130", "Open history"],
+      ["Location Approval", "SSG Cruz", "LPT-5550 / DELL5550-91A23", "Pending", "21 May 1205", "Open history"],
+      ["Document Uploaded", "All SHRHs", "Supply Request Form", "Sent", "21 May 1330", "Open history"],
+    ],
+  },
+  "aar-page": {
+    container: "aarRows",
+    rows: [
+      ["LPT-5550 / 7021-01-RCCE-001", "DELL5550-91A23", "SPC James Hines", "Serial label does not match 2062", "Supply SGT review, PHRH approval needed", "Review AAR"],
+      ["DSK-Z2 / 7025-01-RCCE-004", "HPZ2-PHRH04", "SFC Mills", "Model listed as G8, item is G9", "Pending correction note", "Review AAR"],
+    ],
+  },
+  "location-approvals": {
+    container: "locationApprovalRows",
+    rows: [
+      ["LPT-5550 / DELL5550-91A23", "SPC James Hines", "B-214 / POD-07 / ISB", "B-219 / POD-08 / ISB", "SSG Cruz", "Approve / Reject"],
+      ["MON-24 / DELL24-77Q12", "SPC James Hines", "B-214 / POD-07 / ISB", "Leave monitor at losing POD", "SSG Cruz", "Approve / Reject"],
+      ["LPT-840G10 / HP840G10-23A91", "New HRH", "Supply Room / Excess", "C-102 / POD-12 / IMO", "IMO SHRH", "Approve / Reject"],
+    ],
+  },
+  "missing-page": {
+    container: "missingPageRows",
+    rows: [
+      ["MON-24 / 7025-01-RCCE-005", "DELL24-77Q12", "PFC Mateo Diaz", "ISB / SSG Cruz", "SHRH review", "Open lost report"],
+      ["ENC-KG175D / 5810-01-RCCE-002", "KG175D-SHRH07", "SGT Lina Park", "Crypto Room / SSG Cruz", "Supply SGT review", "Open lost report"],
+      ["SRV-R760 / 7025-01-RCCE-003", "R760-SRV-118", "Server Operations", "DCO / CW2 Novak", "PHRH packet review", "Open lost report"],
+    ],
+  },
+  "inventory-hub": {
+    container: "inventoryHubRows",
+    rows: [
+      ["Monthly Automatic HRH Inventory", "System", "All HRH end users with signed equipment", "31 May 2026", "42%", "Open inventory"],
+      ["Random SHRH Inventory", "SSG Cruz", "ISB HRH end users only", "24 May 2026", "68%", "Open inventory"],
+      ["PHRH Directed Inventory", "SFC Mills", "ISB, IMO, DCO", "27 May 2026", "31%", "Open inventory"],
+      ["Supply SGT Directed SHRH Inventory", "Supply SGT", "All SHRH sections", "29 May 2026", "76%", "Open inventory"],
+    ],
+  },
+  "equipment-requests-page": {
+    container: "equipmentRequestRows",
+    rows: [
+      ["LPT-840G10 / 7021-01-RCCE-008", "HP EliteBook 840 G10 Laptop", "ISB / SPC James Hines", "ISB", "Waiting SHRH approval", "Issue"],
+      ["MON-27 / 7025-01-RCCE-005", "Dell 27-inch Monitor", "IMO / New Technician", "IMO", "Ready to source from excess", "Issue"],
+      ["ENC-KG175D / 5810-01-RCCE-002", "TACLANE Micro Encryption Device", "Crypto Room", "OPS", "Supply SGT/PHRH review", "Issue"],
+    ],
+  },
+  "hr-actions-page": {
+    container: "hrActionRows",
+    rows: [
+      ["HR Transfer", "LPT-5550 / DELL5550-91A23", "SPC Hines / ISB", "SPC Vale / IMO", "Receiving SHRH approval", "Open action"],
+      ["Turn-In", "MON-24 / DELL24-77Q12", "SPC Hines", "SSG Cruz / ISB SHRH", "Waiting SHRH acceptance", "Open action"],
+      ["SHRH Turn-In", "DSK-Z2 / HPZ2-PHRH04", "NMB SHRH", "Supply SGT", "Waiting Supply SGT review", "Open action"],
+    ],
+  },
+  "supplies-page": {
+    container: "supplyCabinetRows",
+    rows: [
+      ["Copy Paper, Letter", "7530-00-222-3521", "12 EA", "6 EA", "Available", "Request"],
+      ["Dry Erase Markers", "7520-01-365-6122", "8 EA", "10 EA", "Low, reorder needed", "Request"],
+      ["Staples and File Folders", "Multiple", "24 EA", "8 EA", "Available", "Request"],
+      ["Printer Toner, MFP", "7510-01-624-7312", "3 EA", "4 EA", "Low, reorder needed", "Request"],
+    ],
+  },
+};
+
 const rolePermissions = {
   supply: {
     title: "Supply SGT / PHRH Visibility",
@@ -920,6 +990,9 @@ let ledgerSearchTerm = "";
 const rowsEl = document.querySelector("#supplyRows");
 const masterLedgerRowsEl = document.querySelector("#masterLedgerRows");
 const pendingSignatureRowsEl = document.querySelector("#pendingSignatureRows");
+const operationPageContainers = Object.fromEntries(
+  Object.values(operationPages).map((page) => [page.container, document.querySelector(`#${page.container}`)]),
+);
 const ledgerTotalCountEl = document.querySelector("#ledgerTotalCount");
 const ledgerSignedCountEl = document.querySelector("#ledgerSignedCount");
 const ledgerUnsignedCountEl = document.querySelector("#ledgerUnsignedCount");
@@ -961,6 +1034,9 @@ function showScreen(screen = "supply") {
   if (screen === "workorders") {
     renderPendingSignatureRows();
   }
+  if (operationPages[screen]) {
+    renderOperationPage(screen);
+  }
 
   if (topEyebrowEl) {
     topEyebrowEl.textContent =
@@ -975,6 +1051,14 @@ function showScreen(screen = "supply") {
         excess: "Excess Assets",
         receipts: "Hand Receipts",
         missing: "Missing Equipment",
+        "email-notices": "Email Notification History",
+        "aar-page": "AAR Change Requests",
+        "location-approvals": "Location Approvals",
+        "missing-page": "Missing Equipment",
+        "inventory-hub": "Inventory Actions",
+        "equipment-requests-page": "Equipment Requests",
+        "hr-actions-page": "HR Actions",
+        "supplies-page": "Open Supplies",
         workorders: "Pending Signatures",
         reports: "Reports",
         documents: "Documents Depository",
@@ -1101,6 +1185,133 @@ function openPendingSignature(item) {
     <div class="detail-line"><span>Route</span><p>${item.route}</p></div>
     <div class="detail-line"><span>Email reminder</span><p>The system can notify the user whose signature or approval is needed and keep the reminder in the equipment file cabinet.</p></div>
   `;
+  drawer.classList.add("open");
+  drawer.setAttribute("aria-hidden", "false");
+}
+
+function renderOperationPage(screen) {
+  const page = operationPages[screen];
+  const container = operationPageContainers[page.container];
+  if (!container) return;
+  container.innerHTML = "";
+
+  page.rows.forEach((cells) => {
+    const row = document.createElement("div");
+    row.className = "operation-row";
+    row.innerHTML = cells
+      .map((cell, index) => {
+        const isAction = index === cells.length - 1;
+        if (!isAction) return `<span>${cell}</span>`;
+        return `<span class="operation-actions">${operationButtons(screen, cell)}</span>`;
+      })
+      .join("");
+    row.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", () => openOperationAction(screen, cells, button.dataset.operationAction));
+    });
+    container.appendChild(row);
+  });
+}
+
+function operationButtons(screen, label) {
+  if (screen === "location-approvals") {
+    return `
+      <button type="button" data-operation-action="approve">Approve</button>
+      <button type="button" data-operation-action="reject">Reject Request</button>
+    `;
+  }
+  if (screen === "equipment-requests-page") {
+    return `
+      <button type="button" data-operation-action="issue">Issue</button>
+      <button type="button" data-operation-action="select-excess">Select Excess</button>
+    `;
+  }
+  if (screen === "supplies-page") {
+    return `<button type="button" data-operation-action="request-supply">Request</button>`;
+  }
+  if (screen === "inventory-hub") {
+    return `<button type="button" data-operation-action="inventory">Open</button>`;
+  }
+  return `<button type="button" data-operation-action="open">${label}</button>`;
+}
+
+function openOperationAction(screen, cells, action) {
+  const titleByScreen = {
+    "email-notices": "Email Notification History",
+    "aar-page": "AAR Change Request",
+    "location-approvals": action === "approve" ? "Approve Location Change" : "Reject Location Change",
+    "missing-page": "Missing Equipment Report",
+    "inventory-hub": "Active Inventory Detail",
+    "equipment-requests-page": action === "select-excess" ? "Select Equipment From Excess" : "Issue Equipment",
+    "hr-actions-page": "HR Action Detail",
+    "supplies-page": "Office Supply Request",
+  };
+
+  drawerTitle.textContent = titleByScreen[screen] || "Line Item Detail";
+
+  if (screen === "equipment-requests-page") {
+    drawerBody.innerHTML = `
+      <div class="detail-line"><span>Requested LIN</span><strong>${cells[0]}</strong></div>
+      <div class="detail-line"><span>Requested item</span><p>${cells[1]}</p></div>
+      <div class="detail-line"><span>Requester</span><p>${cells[2]}</p></div>
+      <div class="detail-line"><span>Issue control</span><p>Select a serialized item from the excess list, then route the equipment to the HRH for signature approval and DA Form 2062 generation.</p></div>
+      <form class="status-question-form">
+        <label>
+          <span>Select from excess</span>
+          <select>
+            <option>HP840G10-23A91 - Supply Room Shelf A2</option>
+            <option>HP840G10-23A94 - Supply Room Shelf A2</option>
+            <option>DELL24-77Q12 - Supply Room Rack M1</option>
+          </select>
+        </label>
+        <label>
+          <span>Issue notes</span>
+          <textarea>Explain why this excess serial is being issued and any delivery or signature instructions.</textarea>
+        </label>
+      </form>
+    `;
+  } else if (screen === "location-approvals") {
+    drawerBody.innerHTML = `
+      <div class="detail-line"><span>LIN / Serial</span><strong>${cells[0]}</strong></div>
+      <div class="detail-line"><span>User</span><p>${cells[1]}</p></div>
+      <div class="detail-line"><span>Requested movement</span><p>${cells[2]} -> ${cells[3]}</p></div>
+      <div class="detail-line"><span>Decision</span><strong>${action === "approve" ? "Approve" : "Reject Request"}</strong></div>
+      <form class="status-question-form">
+        <label>
+          <span>Decision notes</span>
+          <textarea>${action === "approve" ? "Approve the location change and unlock related inventory or transaction routing." : "Explain why this location change is rejected or what correction is required."}</textarea>
+        </label>
+      </form>
+    `;
+  } else if (screen === "inventory-hub") {
+    drawerBody.innerHTML = `
+      <div class="detail-line"><span>Inventory type</span><strong>${cells[0]}</strong></div>
+      <div class="detail-line"><span>Triggered by</span><p>${cells[1]}</p></div>
+      <div class="detail-line"><span>Scope</span><p>${cells[2]}</p></div>
+      <div class="detail-line"><span>End user dashboard ticker</span><p>Every end user with signed equipment sees an inventory request notification with suspense date until they reverify location and validate equipment.</p></div>
+      <div class="detail-line"><span>SHRH / PHRH visibility</span><p>SHRH sees their section only. Supply SGT and PHRH see all active inventories and can target selected sections.</p></div>
+    `;
+  } else if (screen === "supplies-page") {
+    drawerBody.innerHTML = `
+      <div class="detail-line"><span>Nomenclature</span><strong>${cells[0]}</strong></div>
+      <div class="detail-line"><span>NSN</span><p>${cells[1]}</p></div>
+      <div class="detail-line"><span>On hand / reorder limit</span><p>${cells[2]} on hand. Reorder when at or below ${cells[3]}.</p></div>
+      <div class="detail-line"><span>Request form</span><p>Opens the office/expendable supply request form with requestor info, quantity, and notes for Supply SGT fulfillment.</p></div>
+    `;
+  } else if (screen === "aar-page") {
+    drawerBody.innerHTML = `
+      <div class="detail-line"><span>LIN / NSN</span><strong>${cells[0]}</strong></div>
+      <div class="detail-line"><span>Serial / item</span><p>${cells[1]}</p></div>
+      <div class="detail-line"><span>Requested by</span><p>${cells[2]}</p></div>
+      <div class="detail-line"><span>Requested change</span><p>${cells[3]}</p></div>
+      <div class="detail-line"><span>Serial number rule</span><p>Only the Supply SGT can change serial numbers, and Supply SGT serial changes require PHRH approval before updating the master ledger.</p></div>
+    `;
+  } else {
+    drawerBody.innerHTML = cells
+      .slice(0, -1)
+      .map((cell, index) => `<div class="detail-line"><span>Line ${index + 1}</span><p>${cell}</p></div>`)
+      .join("");
+  }
+
   drawer.classList.add("open");
   drawer.setAttribute("aria-hidden", "false");
 }
@@ -1356,6 +1567,7 @@ function createLedgerGroup(group, scope) {
                 <button type="button" data-ledger-action="AAR" data-asset-index="${index}">AAR</button>
                 <button type="button" data-ledger-action="Lost" data-asset-index="${index}">Lost</button>
                 <button type="button" data-ledger-action="Notes" data-asset-index="${index}">Notes</button>
+                <button type="button" data-ledger-action="Delete" data-asset-index="${index}">Delete</button>
               </span>
             </div>
           `,
@@ -1400,10 +1612,20 @@ function openLedgerAction(action, group, asset = group.assets[0]) {
         <textarea>${action === "AAR" ? "Explain the serial number, nomenclature, NSN, or model correction requested." : `Explain why this ${action.toLowerCase()} action is needed for the selected serial number.`}</textarea>
       </label>
     </form>
-    <div class="detail-line"><span>Action rule</span><p>${action} is recorded against the specific serial number and retained in the equipment file cabinet with historical notes, custody records, and location movement history.</p></div>
+    <div class="detail-line"><span>Action rule</span><p>${ledgerActionRule(action)}</p></div>
   `;
   drawer.classList.add("open");
   drawer.setAttribute("aria-hidden", "false");
+}
+
+function ledgerActionRule(action) {
+  if (action === "Delete") {
+    return "Supply SGT deletion requires PHRH approval before the item is removed from the ledger. PHRH can delete without added approval but must annotate why in the notes.";
+  }
+  if (action === "AAR") {
+    return "AAR correction is recorded against this serial number. Only the Supply SGT can change serial numbers, and a Supply SGT serial-number change requires PHRH approval.";
+  }
+  return `${action} is recorded against the specific serial number and retained in the equipment file cabinet with historical notes, custody records, and location movement history.`;
 }
 
 function openMasterFileCabinet(record = masterEquipmentRecords[0]) {
@@ -1851,9 +2073,14 @@ document.querySelectorAll(".pill").forEach((button) => {
 
 document.querySelectorAll(".metric-card").forEach((button) => {
   button.addEventListener("click", () => {
+    if (button.dataset.ledgerStatus) return;
     document.querySelectorAll(".metric-card").forEach((item) => item.classList.remove("active"));
     button.classList.add("active");
     if (button.dataset.screenLink) {
+      if (button.dataset.ledgerStatusLink) {
+        ledgerStatusFilter = button.dataset.ledgerStatusLink;
+        renderMasterLedger();
+      }
       showScreen(button.dataset.screenLink);
       showToast(`${button.textContent.trim()} opened`);
       return;
@@ -1917,6 +2144,10 @@ document.querySelectorAll(".mini-tab").forEach((button) => {
 document.querySelectorAll(".quick-card, .workflow-action").forEach((button) => {
   button.addEventListener("click", () => {
     if (button.dataset.screenLink) {
+      if (button.dataset.ledgerStatusLink) {
+        ledgerStatusFilter = button.dataset.ledgerStatusLink;
+        renderMasterLedger();
+      }
       showScreen(button.dataset.screenLink);
       showToast(`${button.textContent.trim()} opened`);
       return;
@@ -2168,7 +2399,8 @@ function openEquipmentIntake(mode) {
   const isUpload = mode === "upload";
   drawerTitle.textContent = isUpload ? "Upload GCSS-Army Equipment File" : "Manual Equipment Entry";
   drawerBody.innerHTML = `
-    <div class="detail-line"><span>Allowed roles</span><p>Only Supply SGT and PHRH can add new equipment into the ecosystem.</p></div>
+    <div class="detail-line"><span>Allowed roles</span><p>Supply SGT can add or upload equipment only into a pending approval queue. PHRH approval is required before those records become active in the ecosystem.</p></div>
+    <div class="detail-line"><span>PHRH authority</span><p>PHRH can approve equipment intake directly, but must annotate notes explaining the source document, reason, and ledger impact.</p></div>
     <div class="detail-line"><span>Input method</span><strong>${isUpload ? "GCSS-Army Excel, CSV, PDF, or approved source document upload" : "Manual entry for one item or small batch"}</strong></div>
     <form class="status-question-form" aria-label="Equipment intake required fields">
       <label>
@@ -2193,7 +2425,8 @@ function openEquipmentIntake(mode) {
       </label>
     </form>
     <div class="detail-line"><span>Import mapping</span><p>The upload maps Amount, Nomenclature, NSN, Part Number/Make/Model, and Serial Number columns into the property listing.</p></div>
-    <div class="detail-line"><span>Review step</span><p>Supply SGT/PHRH reviews exceptions, duplicate serials, missing NSNs, and non-allowed equipment types before records become active.</p></div>
+    <div class="detail-line"><span>Approval step</span><p>Supply SGT submissions remain pending until the PHRH approves the upload or manual entry. The system does not allow Supply SGT-added equipment to appear as active without authorized PHRH approval.</p></div>
+    <div class="detail-line"><span>Review step</span><p>PHRH reviews exceptions, duplicate serials, missing NSNs, and non-allowed equipment types before records become active.</p></div>
     <div class="detail-line"><span>Property listing update</span><p>Approved equipment updates the property book view, excess/open equipment list, or assigned custody records depending on status.</p></div>
   `;
   drawer.classList.add("open");
@@ -2333,6 +2566,7 @@ document.addEventListener("keydown", (event) => {
 renderRows();
 renderMasterLedger();
 renderPendingSignatureRows();
+Object.keys(operationPages).forEach(renderOperationPage);
 renderPersonalLedgers();
 renderTasks();
 renderPermissions();

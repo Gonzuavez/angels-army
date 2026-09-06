@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=28" />
+    <link rel="stylesheet" href="styles.css?v=29" />
   </head>
   <body>
     <div class="app-shell">
@@ -112,7 +112,7 @@
         </section>
 
         <section class="status-strip" aria-label="Dashboard totals" data-screens="supply phrh">
-          <button class="metric-card active" type="button" data-filter="all">
+          <button class="metric-card active" type="button" data-screen-link="ledger" data-ledger-status-link="signed">
             <span class="metric-label">Readiness</span>
             <strong>93%</strong>
             <small>Equipment with signed 2062</small>
@@ -127,47 +127,47 @@
             <strong>18</strong>
             <small>Second signature or approval</small>
           </button>
-          <button class="metric-card" type="button" data-filter="notifications" data-template="notifications">
+          <button class="metric-card" type="button" data-screen-link="email-notices">
             <span class="metric-label">Email Notices</span>
             <strong>12</strong>
             <small>Automatic alerts sent today</small>
           </button>
-          <button class="metric-card warning" type="button" data-filter="aar-changes" data-jump-tab="pending">
+          <button class="metric-card warning" type="button" data-screen-link="aar-page">
             <span class="metric-label">AAR Change Requests</span>
             <strong>1</strong>
             <small>Serial or nomenclature corrections</small>
           </button>
-          <button class="metric-card warning" type="button" data-filter="location-approvals" data-jump-tab="pending">
+          <button class="metric-card warning" type="button" data-screen-link="location-approvals">
             <span class="metric-label">Location Approvals</span>
             <strong>6</strong>
             <small>Required before transactions</small>
           </button>
-          <button class="metric-card warning" type="button" data-filter="missing" data-jump-tab="missing">
+          <button class="metric-card warning" type="button" data-screen-link="missing-page">
             <span class="metric-label">Missing Equipment</span>
             <strong>7</strong>
             <small>End user reported</small>
           </button>
-          <button class="metric-card" type="button" data-filter="inventory">
+          <button class="metric-card" type="button" data-screen-link="inventory-hub">
             <span class="metric-label">Inventory</span>
             <strong>42%</strong>
             <small id="inventoryMetricLabel">Auto monthly HRH report</small>
           </button>
-          <button class="metric-card" type="button" data-filter="equipment-requests" data-jump-tab="equipreq">
+          <button class="metric-card" type="button" data-screen-link="equipment-requests-page">
             <span class="metric-label">Equipment Requests</span>
             <strong>8</strong>
             <small>Property book items</small>
           </button>
-          <button class="metric-card" type="button" data-filter="hr-actions" data-jump-tab="transfer">
+          <button class="metric-card" type="button" data-screen-link="hr-actions-page">
             <span class="metric-label">HR Actions</span>
             <strong>23</strong>
             <small>Transfers and turn-ins</small>
           </button>
-          <button class="metric-card" type="button" data-filter="excess" data-jump-tab="excess">
+          <button class="metric-card" type="button" data-screen-link="ledger" data-ledger-status-link="excess">
             <span class="metric-label">Open Equipment</span>
             <strong>14</strong>
             <small>Excess assets in supply room</small>
           </button>
-          <button class="metric-card" type="button" data-filter="supplies" data-jump-tab="expendable">
+          <button class="metric-card" type="button" data-screen-link="supplies-page">
             <span class="metric-label">Open Supplies</span>
             <strong>41</strong>
             <small>Expendables on shelf</small>
@@ -301,6 +301,24 @@
           </div>
         </section>
 
+        <section class="panel inventory-ticker-panel" aria-label="Supply and PHRH inventory ticker" data-screens="supply phrh">
+          <div class="panel-header compact">
+            <div>
+              <p class="eyebrow">Active Inventory Ticker</p>
+              <h3>All Open Inventory Requests</h3>
+            </div>
+            <button class="ghost-btn" type="button" data-screen-link="inventory-hub">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Open Inventory Hub
+            </button>
+          </div>
+          <div class="permission-grid">
+            <div class="permission-card"><span>Monthly Automatic</span><p>All HRH end users with signed equipment. Suspense: 31 May 2026.</p></div>
+            <div class="permission-card"><span>SHRH Random</span><p>ISB HRH end users only. Triggered by SSG Cruz. Suspense: 24 May 2026.</p></div>
+            <div class="permission-card"><span>PHRH Directed</span><p>ISB, IMO, and DCO selected for targeted accountability. Suspense: 27 May 2026.</p></div>
+          </div>
+        </section>
+
         <section class="panel personal-equipment-panel" aria-label="Supply SGT and PHRH personal equipment" data-screens="supply phrh">
           <div class="panel-header">
             <div>
@@ -403,7 +421,7 @@ DELL5550-NEW02</textarea>
             </div>
           </div>
           <div class="role-dashboard-grid">
-            <button class="metric-card active" type="button" data-filter="inventory">
+            <button class="metric-card active" type="button" data-screen-link="inventory-hub">
               <span class="metric-label">My Section</span>
               <strong>93%</strong>
               <small>Equipment with signed 2062</small>
@@ -413,17 +431,22 @@ DELL5550-NEW02</textarea>
               <strong>5</strong>
               <small>Waiting on HRH action</small>
             </button>
-            <button class="metric-card warning" type="button" data-filter="location-approvals" data-jump-tab="pending">
+            <button class="metric-card warning" type="button" data-screen-link="location-approvals">
               <span class="metric-label">Location Approvals</span>
               <strong>2</strong>
               <small>My section only</small>
             </button>
-            <button class="metric-card" type="button" data-filter="excess" data-jump-tab="excess">
+            <button class="metric-card" type="button" data-screen-link="ledger" data-ledger-status-link="excess">
               <span class="metric-label">Open Equipment</span>
               <strong>14</strong>
               <small>Request from Supply</small>
             </button>
-            <button class="metric-card warning" type="button" data-filter="supplies" data-jump-tab="expendable">
+            <button class="metric-card" type="button" data-screen-link="equipment-requests-page">
+              <span class="metric-label">Equipment Requests</span>
+              <strong>4</strong>
+              <small>My section line items</small>
+            </button>
+            <button class="metric-card warning" type="button" data-screen-link="supplies-page">
               <span class="metric-label">Expendables</span>
               <strong>41</strong>
               <small>Office supplies available</small>
@@ -439,6 +462,10 @@ DELL5550-NEW02</textarea>
           <div class="permission-card section-status-note">
             <span>SHRH visibility</span>
             <p>This view only shows HRH end users under the selected SHRH section.</p>
+          </div>
+          <div class="permission-card section-status-note">
+            <span>Inventory ticker</span>
+            <p>Open SHRH inventory: ISB HRH end users must reverify location and validate equipment by 24 May 2026.</p>
           </div>
           <div class="role-doc-section">
             <div class="panel-header compact">
@@ -537,7 +564,7 @@ DELL5550-NEW02</textarea>
             </div>
           </div>
           <div class="role-dashboard-grid">
-            <button class="metric-card active" type="button" data-filter="all" data-jump-tab="custody">
+            <button class="metric-card active" type="button" data-screen-link="inventory-hub">
               <span class="metric-label">Assigned Equipment</span>
               <strong>3</strong>
               <small>Laptop and two monitors</small>
@@ -547,12 +574,12 @@ DELL5550-NEW02</textarea>
               <strong>1</strong>
               <small>Needs my action</small>
             </button>
-            <button class="metric-card" type="button" data-filter="excess" data-jump-tab="excess">
+            <button class="metric-card" type="button" data-screen-link="ledger" data-ledger-status-link="excess">
               <span class="metric-label">Request Equipment</span>
               <strong>14</strong>
               <small>Open excess assets</small>
             </button>
-            <button class="metric-card" type="button" data-filter="supplies" data-jump-tab="expendable">
+            <button class="metric-card" type="button" data-screen-link="supplies-page">
               <span class="metric-label">Office Supplies</span>
               <strong>41</strong>
               <small>Request expendables</small>
@@ -561,6 +588,7 @@ DELL5550-NEW02</textarea>
           <div class="permission-grid">
             <div class="permission-card"><span>Assigned SHRH</span><p>SSG Cruz - ISB / DSN 555-0188 / ssg.cruz@example.mil. This is who the user turns equipment in to.</p></div>
             <div class="permission-card"><span>Custody Proof</span><p>Military, DOD civilians, and Local Nationals use DA Form 2062. Contractors use a statement or memo of understanding.</p></div>
+            <div class="permission-card"><span>Inventory requested</span><p>Monthly automatic inventory is open. Reverify room/POD, validate laptop and monitors, and sign updated DA Form 2062 by 31 May 2026.</p></div>
             <div class="permission-card"><span>Self-Reporting</span><p>End users can update room, POD, equipment location notes, duty status, and inventory responses.</p></div>
           </div>
           <div class="role-doc-section personal-custody-section">
@@ -849,6 +877,193 @@ DELL5550-NEW02</textarea>
               <span>Action</span>
             </div>
             <div id="pendingSignatureRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="Email notification history" data-screens="email-notices">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Email Notices</p>
+              <h3>Email Notification History</h3>
+            </div>
+            <button class="ghost-btn" type="button" data-action="Automatic email notifications" data-template="notifications">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Notification Rules
+            </button>
+          </div>
+          <div class="operation-table" role="table" aria-label="Email notification history">
+            <div class="operation-row operation-head" role="row">
+              <span>Notice Type</span>
+              <span>Recipient</span>
+              <span>LIN / Item</span>
+              <span>Status</span>
+              <span>Sent</span>
+              <span>Action</span>
+            </div>
+            <div id="emailNoticeRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="AAR change requests" data-screens="aar-page">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">AAR Change Requests</p>
+              <h3>LIN Items Waiting Correction Approval</h3>
+            </div>
+          </div>
+          <div class="operation-table" role="table" aria-label="AAR change request list">
+            <div class="operation-row operation-head" role="row">
+              <span>LIN / NSN</span>
+              <span>Serial / Item</span>
+              <span>Requested By</span>
+              <span>Requested Change</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+            <div id="aarRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="Location approvals" data-screens="location-approvals">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Location Approvals</p>
+              <h3>LIN Items Pending Room, POD, or Section Approval</h3>
+            </div>
+          </div>
+          <div class="operation-table" role="table" aria-label="Location approval list">
+            <div class="operation-row operation-head" role="row">
+              <span>LIN / Serial</span>
+              <span>User</span>
+              <span>From</span>
+              <span>To</span>
+              <span>Waiting On</span>
+              <span>Decision</span>
+            </div>
+            <div id="locationApprovalRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="Missing equipment page" data-screens="missing-page">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Missing Equipment</p>
+              <h3>Lost Equipment Reports by LIN Item</h3>
+            </div>
+          </div>
+          <div class="operation-table" role="table" aria-label="Missing equipment list">
+            <div class="operation-row operation-head" role="row">
+              <span>LIN / NSN</span>
+              <span>Serial / Item</span>
+              <span>Reported By</span>
+              <span>Section / SHRH</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+            <div id="missingPageRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="Inventory hub" data-screens="inventory-hub">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Inventory Actions</p>
+              <h3>All Active Inventories and Section Targeting</h3>
+            </div>
+            <button class="primary-btn" type="button" data-action="Initiate inventory report" data-template="inventory">
+              <span class="plus-icon" aria-hidden="true"></span>
+              Initiate Inventory
+            </button>
+          </div>
+          <div class="inventory-section-picker">
+            <strong>Supply SGT / PHRH Section Selection</strong>
+            <label><input type="checkbox" checked /> ISB</label>
+            <label><input type="checkbox" checked /> NMB</label>
+            <label><input type="checkbox" /> TCO</label>
+            <label><input type="checkbox" checked /> OPS</label>
+            <label><input type="checkbox" /> Arms Room</label>
+            <label><input type="checkbox" checked /> IMO</label>
+            <label><input type="checkbox" /> SMB</label>
+            <label><input type="checkbox" checked /> DCO</label>
+          </div>
+          <div class="operation-table" role="table" aria-label="Active inventory list">
+            <div class="operation-row operation-head" role="row">
+              <span>Inventory Type</span>
+              <span>Triggered By</span>
+              <span>Scope</span>
+              <span>Suspense</span>
+              <span>Completion</span>
+              <span>Action</span>
+            </div>
+            <div id="inventoryHubRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="Equipment requests" data-screens="equipment-requests-page">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Equipment Requests</p>
+              <h3>Property Book Requests by LIN Item</h3>
+            </div>
+            <button class="ghost-btn" type="button" data-action="New equipment property request" data-template="equipment">
+              <span class="paper-icon" aria-hidden="true"></span>
+              New Request Form
+            </button>
+          </div>
+          <div class="operation-table" role="table" aria-label="Equipment request list">
+            <div class="operation-row operation-head" role="row">
+              <span>LIN / NSN</span>
+              <span>Requested Item</span>
+              <span>Requested By</span>
+              <span>Section</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+            <div id="equipmentRequestRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="HR actions" data-screens="hr-actions-page">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">HR Actions</p>
+              <h3>Transfers and Turn-Ins by LIN Item</h3>
+            </div>
+          </div>
+          <div class="operation-table" role="table" aria-label="HR action list">
+            <div class="operation-row operation-head" role="row">
+              <span>Action Type</span>
+              <span>LIN / Serial</span>
+              <span>From</span>
+              <span>To</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+            <div id="hrActionRows"></div>
+          </div>
+        </section>
+
+        <section class="panel operation-page" aria-label="Open office supplies" data-screens="supplies-page">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Open Supplies</p>
+              <h3>Office Supplies in the Supply Cabinet</h3>
+            </div>
+            <button class="ghost-btn" type="button" data-action="New expendable supply request" data-template="expendable">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Supply Request Form
+            </button>
+          </div>
+          <div class="operation-table" role="table" aria-label="Open supplies list">
+            <div class="operation-row operation-head" role="row">
+              <span>Nomenclature</span>
+              <span>NSN, If Applicable</span>
+              <span>EA On Hand</span>
+              <span>Low Reorder Limit</span>
+              <span>Status</span>
+              <span>Action</span>
+            </div>
+            <div id="supplyCabinetRows"></div>
           </div>
         </section>
 
@@ -1158,6 +1373,6 @@ DELL5550-NEW02</textarea>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="app.js?v=38"></script>
+    <script src="app.js?v=39"></script>
   </body>
 </html>
