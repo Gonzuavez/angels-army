@@ -742,9 +742,11 @@ const pendingSignatureItems = [
     transaction: "Equipment Request",
     lin: "LPT-5550 / 7021-01-RCCE-001",
     serial: "DELL5550-NEW02",
-    firstSignature: "SPC James Hines",
-    waitingOn: "SSG Cruz",
-    route: "HRH request -> SHRH approval -> 2062 signature",
+    firstSignature: "SHRH approved issue",
+    waitingOn: "SPC James Hines",
+    route: "HRH request -> SHRH approval -> HRH 2062 signature",
+    owner: "SPC James Hines",
+    section: "ISB",
   },
   {
     transaction: "Turn-In",
@@ -753,14 +755,18 @@ const pendingSignatureItems = [
     firstSignature: "SPC James Hines",
     waitingOn: "SSG Cruz",
     route: "End User turn-in -> SHRH acceptance",
+    owner: "SPC James Hines",
+    section: "ISB",
   },
   {
     transaction: "HR Transfer",
     lin: "LPT-5550 / 7021-01-RCCE-001",
     serial: "DELL5550-91A23",
     firstSignature: "Losing HRH signed",
-    waitingOn: "Receiving SHRH",
+    waitingOn: "SPC James Hines",
     route: "HRH handshake -> DA Form 3161 -> receiving SHRH approval",
+    owner: "SPC James Hines",
+    section: "ISB",
   },
   {
     transaction: "Contractor Memo",
@@ -769,6 +775,8 @@ const pendingSignatureItems = [
     firstSignature: "Contractor acknowledged",
     waitingOn: "Government approver",
     route: "Contractor memo -> SHRH/Supply SGT approval",
+    owner: "Mr. Nolan Reed",
+    section: "TCO",
   },
   {
     transaction: "AAR Change",
@@ -777,6 +785,8 @@ const pendingSignatureItems = [
     firstSignature: "SFC Mills",
     waitingOn: "Supply SGT / PHRH",
     route: "AAR correction -> master ledger approval",
+    owner: "SFC Mills",
+    section: "NMB",
   },
   {
     transaction: "Location Approval",
@@ -785,6 +795,8 @@ const pendingSignatureItems = [
     firstSignature: "HRH location update",
     waitingOn: "SSG Cruz",
     route: "Room/POD change -> SHRH approval before transaction",
+    owner: "SPC James Hines",
+    section: "ISB",
   },
 ];
 
@@ -986,10 +998,12 @@ let ledgerStatusFilter = "all";
 let ledgerSectionFilter = "all";
 let ledgerTypeFilter = "all";
 let ledgerSearchTerm = "";
+let pendingSignatureScope = "supply";
 
 const rowsEl = document.querySelector("#supplyRows");
 const masterLedgerRowsEl = document.querySelector("#masterLedgerRows");
 const pendingSignatureRowsEl = document.querySelector("#pendingSignatureRows");
+const pendingSignatureScopeNoteEl = document.querySelector("#pendingSignatureScopeNote");
 const operationPageContainers = Object.fromEntries(
   Object.values(operationPages).map((page) => [page.container, document.querySelector(`#${page.container}`)]),
 );
@@ -1157,7 +1171,22 @@ function renderPendingSignatureRows() {
   if (!pendingSignatureRowsEl) return;
   pendingSignatureRowsEl.innerHTML = "";
 
-  pendingSignatureItems.forEach((item) => {
+  const visibleItems = pendingSignatureItems.filter((item) => {
+    if (pendingSignatureScope === "hrh") return item.owner === "SPC James Hines";
+    if (pendingSignatureScope === "shrh") return item.section === "ISB";
+    return true;
+  });
+
+  if (pendingSignatureScopeNoteEl) {
+    pendingSignatureScopeNoteEl.textContent =
+      pendingSignatureScope === "hrh"
+        ? "HRH End Users only see pending signatures tied to their own assigned equipment, personal requests, transfers, turn-ins, location changes, or custody documents. They do not see other HRHs or other sections."
+        : pendingSignatureScope === "shrh"
+          ? "SHRH users see pending signatures for HRH end users and equipment under their own section only."
+          : "Supply SGT and PHRH see pending signatures and approvals across the full RCC-E ecosystem.";
+  }
+
+  visibleItems.forEach((item) => {
     const row = document.createElement("button");
     row.className = "pending-signature-row";
     row.type = "button";
@@ -1173,6 +1202,13 @@ function renderPendingSignatureRows() {
     row.addEventListener("click", () => openPendingSignature(item));
     pendingSignatureRowsEl.appendChild(row);
   });
+
+  if (!visibleItems.length) {
+    const emptyState = document.createElement("div");
+    emptyState.className = "pending-signature-row pending-signature-empty";
+    emptyState.innerHTML = "<span>No pending signatures apply to this dashboard.</span><span></span><span></span><span></span><span></span><span></span><span></span>";
+    pendingSignatureRowsEl.appendChild(emptyState);
+  }
 }
 
 function openPendingSignature(item) {
@@ -2077,6 +2113,9 @@ document.querySelectorAll(".metric-card").forEach((button) => {
     document.querySelectorAll(".metric-card").forEach((item) => item.classList.remove("active"));
     button.classList.add("active");
     if (button.dataset.screenLink) {
+      if (button.dataset.screenLink === "workorders") {
+        pendingSignatureScope = activeScreen;
+      }
       if (button.dataset.ledgerStatusLink) {
         ledgerStatusFilter = button.dataset.ledgerStatusLink;
         renderMasterLedger();
@@ -2128,6 +2167,9 @@ document.querySelectorAll(".nav-item").forEach((button) => {
       renderRows();
     }
 
+    if (view === "workorders") {
+      pendingSignatureScope = activeScreen === "hrh" ? "hrh" : activeScreen === "shrh" ? "shrh" : "supply";
+    }
     showScreen(view);
     showToast(`${button.textContent.trim()} screen opened`);
   });
@@ -2144,6 +2186,9 @@ document.querySelectorAll(".mini-tab").forEach((button) => {
 document.querySelectorAll(".quick-card, .workflow-action").forEach((button) => {
   button.addEventListener("click", () => {
     if (button.dataset.screenLink) {
+      if (button.dataset.screenLink === "workorders") {
+        pendingSignatureScope = activeScreen;
+      }
       if (button.dataset.ledgerStatusLink) {
         ledgerStatusFilter = button.dataset.ledgerStatusLink;
         renderMasterLedger();

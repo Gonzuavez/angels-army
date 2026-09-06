@@ -1183,6 +1183,11 @@ select {
   box-shadow: inset 4px 0 0 var(--amber);
 }
 
+.pending-signature-empty {
+  color: var(--muted);
+  font-weight: 850;
+}
+
 .operation-page {
   scroll-margin-top: 18px;
 }
