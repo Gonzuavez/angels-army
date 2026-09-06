@@ -800,6 +800,54 @@ const pendingSignatureItems = [
   },
 ];
 
+const inventoryRequests = [
+  {
+    type: "Monthly Automatic HRH Inventory",
+    requestedBy: "System",
+    assignedTo: "SPC James Hines",
+    scope: "Laptop DELL5550-91A23 and monitors DELL24-77Q12 / DELL24-77Q13",
+    suspense: "31 May 2026",
+    completion: "Not started",
+    audience: "hrh",
+  },
+  {
+    type: "On-the-Spot SHRH Inventory",
+    requestedBy: "SSG Cruz",
+    assignedTo: "SPC James Hines",
+    scope: "ISB HRH end-user equipment",
+    suspense: "24 May 2026",
+    completion: "Location reverification pending",
+    audience: "hrh",
+  },
+  {
+    type: "Random SHRH Inventory",
+    requestedBy: "Supply SGT",
+    assignedTo: "SSG Cruz",
+    scope: "ISB hand receipt and HRH custody packets",
+    suspense: "29 May 2026",
+    completion: "68%",
+    audience: "shrh",
+  },
+  {
+    type: "PHRH Directed Inventory",
+    requestedBy: "PHRH / SFC Mills",
+    assignedTo: "CW2 Novak",
+    scope: "DCO servers and encryption devices",
+    suspense: "27 May 2026",
+    completion: "31%",
+    audience: "shrh",
+  },
+  {
+    type: "Supply SGT Directed SHRH Inventory",
+    requestedBy: "Supply SGT",
+    assignedTo: "All SHRH users",
+    scope: "All sections: ISB, NMB, TCO, OPS, Arms Room, IMO, SMB, DCO",
+    suspense: "29 May 2026",
+    completion: "76%",
+    audience: "full",
+  },
+];
+
 const operationPages = {
   "email-notices": {
     container: "emailNoticeRows",
@@ -841,6 +889,15 @@ const operationPages = {
       ["Random SHRH Inventory", "SSG Cruz", "ISB HRH end users only", "24 May 2026", "68%", "Open inventory"],
       ["PHRH Directed Inventory", "SFC Mills", "ISB, IMO, DCO", "27 May 2026", "31%", "Open inventory"],
       ["Supply SGT Directed SHRH Inventory", "Supply SGT", "All SHRH sections", "29 May 2026", "76%", "Open inventory"],
+    ],
+  },
+  "property-status": {
+    container: "propertyStatusRows",
+    rows: [
+      ["2062 Readiness", "93% signed custody", "ISB and NMB open actions", "Improving +4% this week", "Property on hand only counts when the signed DA Form 2062 is attached.", "Open report"],
+      ["Late Inventories", "9 past suspense", "SPC Hines, PFC Diaz, SGT Park", "Due now", "Commander can see who is not completing inventory on time.", "Open report"],
+      ["Pending Signatures", "18 waiting signature", "HRH, SHRH, and receiving holders", "6 due today", "Shows who is holding up DA Form 2062, DA Form 3161, AAR, or approval actions.", "Open report"],
+      ["Missing Equipment", "7 open reports", "DCO, ISB, Crypto Room", "2 red", "Tracks lost-equipment reports by LIN, serial, reporter, and section.", "Open report"],
     ],
   },
   "equipment-requests-page": {
@@ -999,11 +1056,14 @@ let ledgerSectionFilter = "all";
 let ledgerTypeFilter = "all";
 let ledgerSearchTerm = "";
 let pendingSignatureScope = "supply";
+let inventoryScope = "full";
 
 const rowsEl = document.querySelector("#supplyRows");
 const masterLedgerRowsEl = document.querySelector("#masterLedgerRows");
 const pendingSignatureRowsEl = document.querySelector("#pendingSignatureRows");
 const pendingSignatureScopeNoteEl = document.querySelector("#pendingSignatureScopeNote");
+const inventoryHubScopeLabelEl = document.querySelector("#inventoryHubScopeLabel");
+const inventoryHubScopeNoteEl = document.querySelector("#inventoryHubScopeNote");
 const operationPageContainers = Object.fromEntries(
   Object.values(operationPages).map((page) => [page.container, document.querySelector(`#${page.container}`)]),
 );
@@ -1070,6 +1130,7 @@ function showScreen(screen = "supply") {
         "location-approvals": "Location Approvals",
         "missing-page": "Missing Equipment",
         "inventory-hub": "Inventory Actions",
+        "property-status": "Property Book Status Reports",
         "equipment-requests-page": "Equipment Requests",
         "hr-actions-page": "HR Actions",
         "supplies-page": "Open Supplies",
@@ -1231,7 +1292,11 @@ function renderOperationPage(screen) {
   if (!container) return;
   container.innerHTML = "";
 
-  page.rows.forEach((cells) => {
+  const rows = screen === "inventory-hub" ? visibleInventoryRows() : page.rows;
+
+  if (screen === "inventory-hub") updateInventoryHubScopeText();
+
+  rows.forEach((cells) => {
     const row = document.createElement("div");
     row.className = "operation-row";
     row.innerHTML = cells
@@ -1246,6 +1311,32 @@ function renderOperationPage(screen) {
     });
     container.appendChild(row);
   });
+}
+
+function visibleInventoryRows() {
+  return inventoryRequests
+    .filter((request) => {
+      if (inventoryScope === "hrh") return request.audience === "hrh" && request.assignedTo === "SPC James Hines";
+      if (inventoryScope === "shrh") return request.audience === "shrh" && request.assignedTo === "SSG Cruz";
+      return true;
+    })
+    .map((request) => [request.type, request.requestedBy, request.assignedTo, request.scope, request.suspense, request.completion, "Open inventory"]);
+}
+
+function updateInventoryHubScopeText() {
+  if (!inventoryHubScopeLabelEl || !inventoryHubScopeNoteEl) return;
+  if (inventoryScope === "hrh") {
+    inventoryHubScopeLabelEl.textContent = "My requested inventories only";
+    inventoryHubScopeNoteEl.textContent = "HRH End Users see only the automatic or on-the-spot inventories assigned specifically to them, with who requested it, inventory type, and suspense date.";
+    return;
+  }
+  if (inventoryScope === "shrh") {
+    inventoryHubScopeLabelEl.textContent = "Inventories requested from this SHRH";
+    inventoryHubScopeNoteEl.textContent = "SHRH users see inventory requests assigned to them and can initiate on-the-spot inventories for HRH users under their own section only.";
+    return;
+  }
+  inventoryHubScopeLabelEl.textContent = "Full visibility";
+  inventoryHubScopeNoteEl.textContent = "Supply SGT and PHRH can see every active inventory request and initiate random or on-the-spot inventories to selected SHRH users or all SHRH users.";
 }
 
 function operationButtons(screen, label) {
@@ -1277,6 +1368,7 @@ function openOperationAction(screen, cells, action) {
     "location-approvals": action === "approve" ? "Approve Location Change" : "Reject Location Change",
     "missing-page": "Missing Equipment Report",
     "inventory-hub": "Active Inventory Detail",
+    "property-status": "Property Book Status Report",
     "equipment-requests-page": action === "select-excess" ? "Select Equipment From Excess" : "Issue Equipment",
     "hr-actions-page": "HR Action Detail",
     "supplies-page": "Office Supply Request",
@@ -1322,9 +1414,21 @@ function openOperationAction(screen, cells, action) {
     drawerBody.innerHTML = `
       <div class="detail-line"><span>Inventory type</span><strong>${cells[0]}</strong></div>
       <div class="detail-line"><span>Triggered by</span><p>${cells[1]}</p></div>
-      <div class="detail-line"><span>Scope</span><p>${cells[2]}</p></div>
+      <div class="detail-line"><span>Assigned to</span><strong>${cells[2]}</strong></div>
+      <div class="detail-line"><span>Scope</span><p>${cells[3]}</p></div>
+      <div class="detail-line"><span>Suspense</span><strong>${cells[4]}</strong></div>
+      <div class="detail-line"><span>Default rule</span><p>Inventory requests default to a one-month suspense unless the initiating SHRH, Supply SGT, or PHRH sets a different due date within their permission scope.</p></div>
       <div class="detail-line"><span>End user dashboard ticker</span><p>Every end user with signed equipment sees an inventory request notification with suspense date until they reverify location and validate equipment.</p></div>
       <div class="detail-line"><span>SHRH / PHRH visibility</span><p>SHRH sees their section only. Supply SGT and PHRH see all active inventories and can target selected sections.</p></div>
+    `;
+  } else if (screen === "property-status") {
+    drawerBody.innerHTML = `
+      <div class="detail-line"><span>Report area</span><strong>${cells[0]}</strong></div>
+      <div class="detail-line"><span>Commander metric</span><p>${cells[1]}</p></div>
+      <div class="detail-line"><span>Problem owner</span><p>${cells[2]}</p></div>
+      <div class="detail-line"><span>Due / trend</span><p>${cells[3]}</p></div>
+      <div class="detail-line"><span>Meeting note</span><p>${cells[4]}</p></div>
+      <div class="detail-line"><span>Purpose</span><p>This report supports company meeting visibility into signed custody, late inventories, pending signatures, missing equipment, and where command attention is needed.</p></div>
     `;
   } else if (screen === "supplies-page") {
     drawerBody.innerHTML = `
@@ -2116,6 +2220,9 @@ document.querySelectorAll(".metric-card").forEach((button) => {
       if (button.dataset.screenLink === "workorders") {
         pendingSignatureScope = activeScreen;
       }
+      if (button.dataset.screenLink === "inventory-hub") {
+        inventoryScope = button.dataset.inventoryScopeLink || (activeScreen === "hrh" ? "hrh" : activeScreen === "shrh" ? "shrh" : "full");
+      }
       if (button.dataset.ledgerStatusLink) {
         ledgerStatusFilter = button.dataset.ledgerStatusLink;
         renderMasterLedger();
@@ -2188,6 +2295,9 @@ document.querySelectorAll(".quick-card, .workflow-action").forEach((button) => {
     if (button.dataset.screenLink) {
       if (button.dataset.screenLink === "workorders") {
         pendingSignatureScope = activeScreen;
+      }
+      if (button.dataset.screenLink === "inventory-hub") {
+        inventoryScope = button.dataset.inventoryScopeLink || (activeScreen === "hrh" ? "hrh" : activeScreen === "shrh" ? "shrh" : "full");
       }
       if (button.dataset.ledgerStatusLink) {
         ledgerStatusFilter = button.dataset.ledgerStatusLink;
@@ -2370,7 +2480,9 @@ function openWorkflow(title, template) {
       ["Transaction control", "FOI equipment cannot be issued, transferred, or counted as available excess equipment until Supply SGT/PHRH completes research and approval."],
     ],
     inventory: [
-      ["On-demand SHRH option", `An SHRH can initiate an inventory report whenever needed for their own section only. Current selected section: ${selectedShrhSection}. This is separate from the automatic monthly HRH inventory.`],
+      ["On-demand SHRH option", `An SHRH can initiate an inventory report whenever needed for HRH users under their own section only. Current selected section: ${selectedShrhSection}. This is separate from the automatic monthly HRH inventory.`],
+      ["Supply SGT / PHRH targeting", "Supply SGT and PHRH can initiate random or on-the-spot inventories to selected SHRH users or all SHRH users under the property book."],
+      ["Suspense date", "The default due date is one month from initiation, but the initiator can set a shorter or longer suspense date inside their permission scope."],
       ["Workflow", "The end user first reverifies location, room, POD, section, and assigned SHRH before any equipment is validated."],
       ["Location approval", "If that reverification changes location or SHRH, PHRH, SHRH, or Supply SGT approval is required before equipment validation or transaction routing continues."],
       ["2062 validation", "After location approval is complete, the user validates serialized equipment such as laptop, monitors, desktop, server, or encryption device and signs a fresh DA Form 2062 when required."],

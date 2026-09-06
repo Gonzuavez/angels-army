@@ -1211,6 +1211,11 @@ select {
   border-bottom: 2px solid #e0e6e2;
 }
 
+.inventory-operation-table .operation-row {
+  grid-template-columns: repeat(6, minmax(145px, 1fr)) minmax(180px, 0.9fr);
+  min-width: 1220px;
+}
+
 .operation-head {
   position: sticky;
   top: 0;

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=30" />
+    <link rel="stylesheet" href="styles.css?v=32" />
   </head>
   <body>
     <div class="app-shell">
@@ -147,10 +147,15 @@
             <strong>7</strong>
             <small>End user reported</small>
           </button>
-          <button class="metric-card" type="button" data-screen-link="inventory-hub">
+          <button class="metric-card" type="button" data-screen-link="inventory-hub" data-inventory-scope-link="full">
             <span class="metric-label">Inventory</span>
             <strong>42%</strong>
             <small id="inventoryMetricLabel">Auto monthly HRH report</small>
+          </button>
+          <button class="metric-card" type="button" data-screen-link="property-status">
+            <span class="metric-label">Property Book Status</span>
+            <strong>93%</strong>
+            <small>Commander meeting report</small>
           </button>
           <button class="metric-card" type="button" data-screen-link="equipment-requests-page">
             <span class="metric-label">Equipment Requests</span>
@@ -307,7 +312,7 @@
               <p class="eyebrow">Active Inventory Ticker</p>
               <h3>All Open Inventory Requests</h3>
             </div>
-            <button class="ghost-btn" type="button" data-screen-link="inventory-hub">
+            <button class="ghost-btn workflow-action" type="button" data-screen-link="inventory-hub">
               <span class="paper-icon" aria-hidden="true"></span>
               Open Inventory Hub
             </button>
@@ -421,10 +426,15 @@ DELL5550-NEW02</textarea>
             </div>
           </div>
           <div class="role-dashboard-grid">
-            <button class="metric-card active" type="button" data-screen-link="inventory-hub">
+            <button class="metric-card active" type="button" data-screen-link="ledger" data-ledger-status-link="signed">
               <span class="metric-label">My Section</span>
               <strong>93%</strong>
               <small>Equipment with signed 2062</small>
+            </button>
+            <button class="metric-card" type="button" data-screen-link="inventory-hub" data-inventory-scope-link="shrh">
+              <span class="metric-label">Inventory Requested</span>
+              <strong>2</strong>
+              <small>Assigned to this SHRH</small>
             </button>
             <button class="metric-card" type="button" data-screen-link="workorders">
               <span class="metric-label">End User Signatures</span>
@@ -564,10 +574,15 @@ DELL5550-NEW02</textarea>
             </div>
           </div>
           <div class="role-dashboard-grid">
-            <button class="metric-card active" type="button" data-screen-link="inventory-hub">
+            <button class="metric-card active" type="button" data-screen-link="ledger" data-ledger-status-link="signed">
               <span class="metric-label">Assigned Equipment</span>
               <strong>3</strong>
               <small>Laptop and two monitors</small>
+            </button>
+            <button class="metric-card warning" type="button" data-screen-link="inventory-hub" data-inventory-scope-link="hrh">
+              <span class="metric-label">Inventory Requested</span>
+              <strong>2</strong>
+              <small>Due dates assigned to me</small>
             </button>
             <button class="metric-card" type="button" data-screen-link="workorders">
               <span class="metric-label">Pending Signature</span>
@@ -857,7 +872,7 @@ DELL5550-NEW02</textarea>
               <p class="eyebrow">Pending Signatures</p>
               <h3>Serialized Equipment Waiting Signature or Approval</h3>
             </div>
-            <button class="ghost-btn" type="button" data-action="Automatic email notifications" data-template="notifications">
+            <button class="ghost-btn workflow-action" type="button" data-action="Automatic email notifications" data-template="notifications">
               <span class="paper-icon" aria-hidden="true"></span>
               Send Reminder Batch
             </button>
@@ -886,7 +901,7 @@ DELL5550-NEW02</textarea>
               <p class="eyebrow">Email Notices</p>
               <h3>Email Notification History</h3>
             </div>
-            <button class="ghost-btn" type="button" data-action="Automatic email notifications" data-template="notifications">
+            <button class="ghost-btn workflow-action" type="button" data-action="Automatic email notifications" data-template="notifications">
               <span class="paper-icon" aria-hidden="true"></span>
               Notification Rules
             </button>
@@ -970,13 +985,13 @@ DELL5550-NEW02</textarea>
               <p class="eyebrow">Inventory Actions</p>
               <h3>All Active Inventories and Section Targeting</h3>
             </div>
-            <button class="primary-btn" type="button" data-action="Initiate inventory report" data-template="inventory">
+            <button class="primary-btn workflow-action" type="button" data-action="Initiate inventory report" data-template="inventory">
               <span class="plus-icon" aria-hidden="true"></span>
               Initiate Inventory
             </button>
           </div>
           <div class="inventory-section-picker">
-            <strong>Supply SGT / PHRH Section Selection</strong>
+            <strong>Supply SGT / PHRH Section and SHRH Selection</strong>
             <label><input type="checkbox" checked /> ISB</label>
             <label><input type="checkbox" checked /> NMB</label>
             <label><input type="checkbox" /> TCO</label>
@@ -986,10 +1001,15 @@ DELL5550-NEW02</textarea>
             <label><input type="checkbox" /> SMB</label>
             <label><input type="checkbox" checked /> DCO</label>
           </div>
-          <div class="operation-table" role="table" aria-label="Active inventory list">
+          <div class="master-ledger-note">
+            <strong id="inventoryHubScopeLabel">Full visibility</strong>
+            <p id="inventoryHubScopeNote">Supply SGT and PHRH can see every active inventory request and initiate random or on-the-spot inventories to selected SHRH users or all SHRH users.</p>
+          </div>
+          <div class="operation-table inventory-operation-table" role="table" aria-label="Active inventory list">
             <div class="operation-row operation-head" role="row">
               <span>Inventory Type</span>
               <span>Triggered By</span>
+              <span>Assigned To</span>
               <span>Scope</span>
               <span>Suspense</span>
               <span>Completion</span>
@@ -999,13 +1019,43 @@ DELL5550-NEW02</textarea>
           </div>
         </section>
 
+        <section class="panel operation-page" aria-label="Property book status reports" data-screens="property-status">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Property Book Status Reports</p>
+              <h3>Commander Meeting Metrics</h3>
+            </div>
+            <button class="ghost-btn workflow-action" type="button" data-screen-link="ledger">
+              <span class="paper-icon" aria-hidden="true"></span>
+              Open Master Ledger
+            </button>
+          </div>
+          <div class="ledger-status-grid">
+            <div class="metric-card"><span class="metric-label">Signed 2062</span><strong>93%</strong><small>Counts as property on hand</small></div>
+            <div class="metric-card warning"><span class="metric-label">Late Inventories</span><strong>9</strong><small>Past suspense</small></div>
+            <div class="metric-card warning"><span class="metric-label">Pending Forms</span><strong>18</strong><small>Waiting signature or approval</small></div>
+            <div class="metric-card danger"><span class="metric-label">Missing Reports</span><strong>7</strong><small>Open lost-equipment actions</small></div>
+          </div>
+          <div class="operation-table" role="table" aria-label="Property book status report list">
+            <div class="operation-row operation-head" role="row">
+              <span>Report Area</span>
+              <span>Commander Metric</span>
+              <span>Problem Owner</span>
+              <span>Due / Trend</span>
+              <span>Meeting Note</span>
+              <span>Action</span>
+            </div>
+            <div id="propertyStatusRows"></div>
+          </div>
+        </section>
+
         <section class="panel operation-page" aria-label="Equipment requests" data-screens="equipment-requests-page">
           <div class="panel-header">
             <div>
               <p class="eyebrow">Equipment Requests</p>
               <h3>Property Book Requests by LIN Item</h3>
             </div>
-            <button class="ghost-btn" type="button" data-action="New equipment property request" data-template="equipment">
+            <button class="ghost-btn workflow-action" type="button" data-action="New equipment property request" data-template="equipment">
               <span class="paper-icon" aria-hidden="true"></span>
               New Request Form
             </button>
@@ -1049,7 +1099,7 @@ DELL5550-NEW02</textarea>
               <p class="eyebrow">Open Supplies</p>
               <h3>Office Supplies in the Supply Cabinet</h3>
             </div>
-            <button class="ghost-btn" type="button" data-action="New expendable supply request" data-template="expendable">
+            <button class="ghost-btn workflow-action" type="button" data-action="New expendable supply request" data-template="expendable">
               <span class="paper-icon" aria-hidden="true"></span>
               Supply Request Form
             </button>
@@ -1373,6 +1423,6 @@ DELL5550-NEW02</textarea>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="app.js?v=40"></script>
+    <script src="app.js?v=42"></script>
   </body>
 </html>
