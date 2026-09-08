@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A.N.G.E.L.S. Supply SGT Dashboard</title>
-    <link rel="stylesheet" href="styles.css?v=33" />
+    <link rel="stylesheet" href="styles.css?v=34" />
   </head>
   <body>
     <div class="app-shell">
@@ -28,7 +28,7 @@
           </button>
           <button class="nav-item" type="button" data-view="ledger">
             <span class="icon paper-icon" aria-hidden="true"></span>
-            Master Ledger
+            Master Equipment Hub
           </button>
           <button class="nav-item" type="button" data-view="shrh">
             <span class="icon box-icon" aria-hidden="true"></span>
@@ -108,7 +108,7 @@
         </header>
 
         <section class="brand-banner" aria-label="A.N.G.E.L.S. brand banner" data-screens="supply phrh ledger shrh hrh">
-          <img src="assets/angels-logo-banner.jpg" alt="A.N.G.E.L.S. Army Network Global Equipment Logistics System banner" />
+          <img src="assets/angels-logo-banner.png" alt="A.N.G.E.L.S. Army Network Global Equipment Logistics System banner" />
         </section>
 
         <section class="status-strip" aria-label="Dashboard totals" data-screens="supply phrh">
@@ -118,7 +118,7 @@
             <small>Equipment with signed 2062</small>
           </button>
           <button class="metric-card" type="button" data-screen-link="ledger">
-            <span class="metric-label">Master Ledger Hub</span>
+            <span class="metric-label">Master Equipment Hub</span>
             <strong>5</strong>
             <small>LIN groups by section and SHRH</small>
           </button>
@@ -192,7 +192,7 @@
         <section class="panel master-ledger-panel" aria-label="Master equipment ledger" data-screens="ledger">
           <div class="panel-header">
             <div>
-              <p class="eyebrow">Master Equipment Ledger Hub</p>
+              <p class="eyebrow">Master Equipment Hub</p>
               <h3>LIN-Level Dashboard by SHRH, Section, and Excess</h3>
             </div>
             <button id="openMasterLedgerBtn" class="ghost-btn" type="button">
@@ -323,8 +323,8 @@
             </button>
           </div>
           <div class="permission-grid">
-            <div class="permission-card"><span>Monthly Automatic</span><p>All HRH end users with signed equipment. Suspense: 31 May 2026.</p></div>
-            <div class="permission-card"><span>SHRH Random</span><p>ISB HRH end users only. Triggered by SSG Cruz. Suspense: 24 May 2026.</p></div>
+            <div class="permission-card"><span>Automatic Inventory</span><p>All HRH end users with signed equipment. Suspense: 31 May 2026.</p></div>
+            <div class="permission-card"><span>SHRH On-Demand</span><p>ISB HRH end users only. Triggered by SSG Cruz. Suspense: 24 May 2026.</p></div>
             <div class="permission-card"><span>PHRH Directed</span><p>ISB, IMO, and DCO selected for targeted accountability. Suspense: 27 May 2026.</p></div>
           </div>
         </section>
@@ -514,7 +514,7 @@ DELL5550-NEW02</textarea>
             </div>
           </div>
           <div class="quick-grid compact-actions">
-            <button class="quick-card" type="button" data-action="Initiate SHRH section inventory report" data-template="inventory"><strong>Inventory Report</strong><small>On-demand for my section only</small></button>
+            <button class="quick-card" type="button" data-action="Initiate SHRH section inventory report" data-template="inventory"><strong>Inventory Report</strong><small>On-Demand for my section only</small></button>
             <button class="quick-card" type="button" data-action="Approve location change request" data-template="location"><strong>Location Approval</strong><small>Approve before transactions continue</small></button>
             <button class="quick-card" type="button" data-action="New HR transfer request" data-template="transfer"><strong>HR Transfer</strong><small>Move equipment to another SHRH or HRH</small></button>
             <button class="quick-card" type="button" data-action="New turn-in equipment request" data-template="turnin"><strong>Turn-In</strong><small>Send equipment to Supply SGT</small></button>
@@ -1013,7 +1013,7 @@ DELL5550-NEW02</textarea>
           </div>
           <div class="master-ledger-note">
             <strong id="inventoryHubScopeLabel">Full visibility</strong>
-            <p id="inventoryHubScopeNote">Supply SGT and PHRH can see every active inventory request and initiate random or on-the-spot inventories to selected SHRH users or all SHRH users.</p>
+            <p id="inventoryHubScopeNote">Supply SGT and PHRH can see every active inventory request and initiate On-Demand inventories to selected SHRH users or all SHRH users.</p>
           </div>
           <div class="inventory-request-list" aria-label="Active inventory list">
             <div class="operation-row operation-head inventory-summary-grid" role="row">
@@ -1061,7 +1061,7 @@ DELL5550-NEW02</textarea>
             </div>
             <button class="ghost-btn workflow-action" type="button" data-screen-link="ledger">
               <span class="paper-icon" aria-hidden="true"></span>
-              Open Master Ledger
+              Open Master Equipment Hub
             </button>
           </div>
           <div class="ledger-status-grid">
@@ -1257,7 +1257,7 @@ DELL5550-NEW02</textarea>
                 <small>Reported</small>
               </div>
               <div>
-                <strong id="inventoryScopeTitle">Automatic monthly HRH inventory</strong>
+                <strong id="inventoryScopeTitle">Automatic HRH Inventory - Monthly cadence</strong>
                 <p id="inventoryScopeText">Inventory percentage is based on the selected inventory report type. The automatic system request can be changed by Supply SGT/PHRH in settings.</p>
               </div>
             </div>
@@ -1266,11 +1266,11 @@ DELL5550-NEW02</textarea>
               <label>
                 <span>Reporting Type</span>
                 <select id="inventoryTypeSelect">
-                  <option value="auto-monthly">Automatic monthly HRH inventory</option>
-                  <option value="auto-weekly">Automatic weekly HRH inventory</option>
-                  <option value="auto-quarterly">Automatic quarterly HRH inventory</option>
-                  <option value="auto-biannual">Automatic bi-annual HRH inventory</option>
-                  <option value="auto-annual">Automatic annual HRH inventory</option>
+                  <option value="auto-monthly">Automatic HRH Inventory - Monthly cadence</option>
+                  <option value="auto-weekly">Automatic HRH Inventory - Weekly cadence</option>
+                  <option value="auto-quarterly">Automatic HRH Inventory - Quarterly cadence</option>
+                  <option value="auto-biannual">Automatic HRH Inventory - Bi-annual cadence</option>
+                  <option value="auto-annual">Automatic HRH Inventory - Annual cadence</option>
                   <option value="shrh">SHRH requested from End Users</option>
                   <option value="supply">Supply SGT/PHRH requested from SHRH</option>
                 </select>
@@ -1406,7 +1406,7 @@ DELL5550-NEW02</textarea>
           </button>
           <button class="quick-card featured" type="button" data-screen-link="ledger">
             <span class="icon paper-icon" aria-hidden="true"></span>
-            <strong>Master Ledger Hub</strong>
+            <strong>Master Equipment Hub</strong>
             <small>Open LIN dashboard</small>
           </button>
           <button class="quick-card" type="button" data-action="Browse excess assets" data-template="excess">
@@ -1457,6 +1457,6 @@ DELL5550-NEW02</textarea>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="app.js?v=43"></script>
+    <script src="app.js?v=44"></script>
   </body>
 </html>

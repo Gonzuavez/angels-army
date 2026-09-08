@@ -803,7 +803,7 @@ const pendingSignatureItems = [
 const inventoryRequests = [
   {
     id: "inv-hrh-monthly",
-    type: "Monthly Automatic HRH Inventory",
+    type: "Automatic HRH Inventory",
     requestedBy: "System",
     assignedTo: "SPC James Hines",
     scope: "Laptop DELL5550-91A23 and monitors DELL24-77Q12 / DELL24-77Q13",
@@ -819,7 +819,7 @@ const inventoryRequests = [
   },
   {
     id: "inv-hrh-spot",
-    type: "On-the-Spot SHRH Inventory",
+    type: "On-Demand SHRH Inventory",
     requestedBy: "SSG Cruz",
     assignedTo: "SPC James Hines",
     scope: "ISB HRH end-user equipment",
@@ -833,8 +833,8 @@ const inventoryRequests = [
     ],
   },
   {
-    id: "inv-shrh-random",
-    type: "Random SHRH Inventory",
+    id: "inv-shrh-ondemand",
+    type: "On-Demand SHRH Inventory",
     requestedBy: "Supply SGT",
     assignedTo: "SSG Cruz",
     scope: "ISB hand receipt and HRH custody packets",
@@ -918,8 +918,8 @@ const operationPages = {
   "inventory-hub": {
     container: "inventoryHubRows",
     rows: [
-      ["Monthly Automatic HRH Inventory", "System", "All HRH end users with signed equipment", "31 May 2026", "42%", "Open inventory"],
-      ["Random SHRH Inventory", "SSG Cruz", "ISB HRH end users only", "24 May 2026", "68%", "Open inventory"],
+      ["Automatic HRH Inventory", "System", "All HRH end users with signed equipment", "31 May 2026", "42%", "Open inventory"],
+      ["On-Demand SHRH Inventory", "SSG Cruz", "ISB HRH end users only", "24 May 2026", "68%", "Open inventory"],
       ["PHRH Directed Inventory", "SFC Mills", "ISB, IMO, DCO", "27 May 2026", "31%", "Open inventory"],
       ["Supply SGT Directed SHRH Inventory", "Supply SGT", "All SHRH sections", "29 May 2026", "76%", "Open inventory"],
     ],
@@ -1021,31 +1021,31 @@ const podNotes = {
 const inventoryModes = {
   "auto-monthly": {
     label: "Auto monthly HRH report",
-    title: "Automatic monthly HRH inventory",
+    title: "Automatic HRH Inventory - Monthly cadence",
     percent: "42%",
     text: "System automatically asks HRH end users to self-report equipment. Supply SGT/PHRH can change this cadence in settings.",
   },
   "auto-weekly": {
     label: "Auto weekly HRH report",
-    title: "Automatic weekly HRH inventory",
+    title: "Automatic HRH Inventory - Weekly cadence",
     percent: "68%",
     text: "Weekly automatic HRH inventory can run for high-risk equipment, telework-heavy sections, or commander-directed focus areas.",
   },
   "auto-quarterly": {
     label: "Auto quarterly HRH report",
-    title: "Automatic quarterly HRH inventory",
+    title: "Automatic HRH Inventory - Quarterly cadence",
     percent: "81%",
     text: "Quarterly automatic HRH inventory can run alongside monthly or annual options when Supply SGT/PHRH enables multiple schedules.",
   },
   "auto-biannual": {
     label: "Auto bi-annual HRH report",
-    title: "Automatic bi-annual HRH inventory",
+    title: "Automatic HRH Inventory - Bi-annual cadence",
     percent: "89%",
     text: "Bi-annual reporting reflects the selected automatic inventory cycle and only measures responses for that cycle.",
   },
   "auto-annual": {
     label: "Auto annual HRH report",
-    title: "Automatic annual HRH inventory",
+    title: "Automatic HRH Inventory - Annual cadence",
     percent: "94%",
     text: "Annual automatic reporting can be used for broad accountability checks, with the percentage tied to that annual request.",
   },
@@ -1156,7 +1156,7 @@ function showScreen(screen = "supply") {
         phrh: "PHRH Dashboard",
         shrh: "SHRH Dashboard",
         hrh: "HRH End User Dashboard",
-        ledger: "Master Equipment Ledger Hub",
+        ledger: "Master Equipment Hub",
         profile: "Profile Setup",
         inventory: "Inventory Reporting",
         excess: "Excess Assets",
@@ -1495,16 +1495,16 @@ function updateInventoryHubScopeText() {
   if (!inventoryHubScopeLabelEl || !inventoryHubScopeNoteEl) return;
   if (inventoryScope === "hrh") {
     inventoryHubScopeLabelEl.textContent = "My requested inventories only";
-    inventoryHubScopeNoteEl.textContent = "HRH End Users see only the automatic or on-the-spot inventories assigned specifically to them, with who requested it, inventory type, and suspense date.";
+    inventoryHubScopeNoteEl.textContent = "HRH End Users see only the Automatic or On-Demand inventories assigned specifically to them, with who requested it, inventory type, and suspense date.";
     return;
   }
   if (inventoryScope === "shrh") {
     inventoryHubScopeLabelEl.textContent = "Inventories requested from this SHRH";
-    inventoryHubScopeNoteEl.textContent = "SHRH users see inventory requests assigned to them and can initiate on-the-spot inventories for HRH users under their own section only.";
+    inventoryHubScopeNoteEl.textContent = "SHRH users see inventory requests assigned to them and can initiate On-Demand inventories for HRH users under their own section only.";
     return;
   }
   inventoryHubScopeLabelEl.textContent = "Full visibility";
-  inventoryHubScopeNoteEl.textContent = "Supply SGT and PHRH can see every active inventory request and initiate random or on-the-spot inventories to selected SHRH users or all SHRH users.";
+  inventoryHubScopeNoteEl.textContent = "Supply SGT and PHRH can see every active inventory request and initiate On-Demand inventories to selected SHRH users or all SHRH users.";
 }
 
 function operationButtons(screen, label) {
@@ -2658,14 +2658,14 @@ function openWorkflow(title, template) {
       ["Transaction control", "FOI equipment cannot be issued, transferred, or counted as available excess equipment until Supply SGT/PHRH completes research and approval."],
     ],
     inventory: [
-      ["On-demand SHRH option", `An SHRH can initiate an inventory report whenever needed for HRH users under their own section only. Current selected section: ${selectedShrhSection}. This is separate from the automatic monthly HRH inventory.`],
-      ["Supply SGT / PHRH targeting", "Supply SGT and PHRH can initiate random or on-the-spot inventories to selected SHRH users or all SHRH users under the property book."],
+      ["On-Demand SHRH option", `An SHRH can initiate an inventory report whenever needed for HRH users under their own section only. Current selected section: ${selectedShrhSection}. This is separate from the Automatic HRH inventory.`],
+      ["Supply SGT / PHRH targeting", "Supply SGT and PHRH can initiate On-Demand inventories to selected SHRH users or all SHRH users under the property book."],
       ["Suspense date", "The default due date is one month from initiation, but the initiator can set a shorter or longer suspense date inside their permission scope."],
       ["Workflow", "The end user first reverifies location, room, POD, section, and assigned SHRH before any equipment is validated."],
       ["Location approval", "If that reverification changes location or SHRH, PHRH, SHRH, or Supply SGT approval is required before equipment validation or transaction routing continues."],
       ["2062 validation", "After location approval is complete, the user validates serialized equipment such as laptop, monitors, desktop, server, or encryption device and signs a fresh DA Form 2062 when required."],
       ["Section change", "If the location update changes the user's section and SHRH, the system asks whether to turn in equipment, transfer equipment to the gaining SHRH, or split equipment by leaving monitors and taking only the laptop."],
-      ["Automatic inventory", "The system still initiates the automatic monthly HRH inventory unless Supply SGT/PHRH changes that cadence in settings."],
+      ["Automatic Inventory", "The system still initiates Automatic HRH Inventories unless Supply SGT/PHRH changes that cadence in settings."],
     ],
   }[template];
 
