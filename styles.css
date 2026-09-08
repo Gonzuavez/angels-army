@@ -177,47 +177,17 @@ button {
 }
 
 .brand-banner {
-  position: relative;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  padding: 10px;
   border: 1px solid #202820;
   border-radius: 8px;
   background: #050b0f;
   box-shadow: var(--shadow);
 }
 
-.brand-banner::before {
-  position: absolute;
-  inset: 0;
-  content: "";
-  background:
-    linear-gradient(90deg, rgba(5, 11, 15, 0.34), rgba(5, 11, 15, 0.08), rgba(5, 11, 15, 0.34)),
-    url("assets/angels-collage-backdrop.png") center / cover no-repeat;
-  filter: saturate(1.08) contrast(1.04);
-  opacity: 0.9;
-}
-
-.brand-banner::after {
-  position: absolute;
-  inset: 0;
-  content: "";
-  background:
-    linear-gradient(180deg, rgba(5, 11, 15, 0.08), rgba(5, 11, 15, 0.36)),
-    radial-gradient(circle at 18% 48%, rgba(183, 121, 31, 0.18), transparent 28%),
-    radial-gradient(circle at 82% 46%, rgba(220, 232, 207, 0.11), transparent 30%);
-  pointer-events: none;
-}
-
 .brand-banner img {
-  position: relative;
-  z-index: 1;
   display: block;
-  width: min(100%, 760px);
+  width: 100%;
   height: auto;
-  border: 1px solid rgba(220, 232, 207, 0.14);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
 }
 
 .top-actions {
