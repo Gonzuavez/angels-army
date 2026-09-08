@@ -193,11 +193,10 @@ button {
   inset: 0;
   content: "";
   background:
-    linear-gradient(90deg, rgba(5, 11, 15, 0.25), rgba(5, 11, 15, 0.06), rgba(5, 11, 15, 0.25)),
-    url("assets/angels-logo-banner.png") center / cover no-repeat;
-  filter: saturate(1.12) contrast(1.06) blur(1px);
-  opacity: 0.58;
-  transform: scale(1.04);
+    linear-gradient(90deg, rgba(5, 11, 15, 0.34), rgba(5, 11, 15, 0.08), rgba(5, 11, 15, 0.34)),
+    url("assets/angels-collage-backdrop.png") center / cover no-repeat;
+  filter: saturate(1.08) contrast(1.04);
+  opacity: 0.9;
 }
 
 .brand-banner::after {
@@ -215,10 +214,10 @@ button {
   position: relative;
   z-index: 1;
   display: block;
-  width: min(100%, 820px);
+  width: min(100%, 760px);
   height: auto;
   border: 1px solid rgba(220, 232, 207, 0.14);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
 }
 
 .top-actions {
